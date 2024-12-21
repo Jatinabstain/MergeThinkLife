@@ -11,12 +11,19 @@ import ArticleCard from '../common/components/articles/articleCard';
 import { ArticleItem } from "@/types/articleCardTypes";
 import articleImg from '../../../public/assets/card-1.jpg';
 
-const articles: ArticleItem[] = [
-    { id: '1', title: "Nike Sneakers", date: "4 Feb 2024", content: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint.  Amet minim mollit non deserunt", time: "5 Minute Read",  href: "article", image: articleImg },
-    { id: '2', title: "Nike Sneakers", date: "4 Feb 2024", content: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint.  Amet minim mollit non deserunt", time: "5 Minute Read",  href: "article", image: articleImg },
-    { id: '3', title: "Nike Sneakers", date: "4 Feb 2024", content: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint.  Amet minim mollit non deserunt", time: "5 Minute Read",  href: "article", image: articleImg }
-]
+// const articles: ArticleItem[] = [
+//     { id: '1', title: "Nike Sneakers", date: "4 Feb 2024", content: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint.  Amet minim mollit non deserunt", time: "5 Minute Read",  href: "article", image: articleImg },
+//     { id: '2', title: "Nike Sneakers", date: "4 Feb 2024", content: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint.  Amet minim mollit non deserunt", time: "5 Minute Read",  href: "article", image: articleImg },
+//     { id: '3', title: "Nike Sneakers", date: "4 Feb 2024", content: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint.  Amet minim mollit non deserunt", time: "5 Minute Read",  href: "article", image: articleImg }
+// ]
 
+
+
+const articles: ArticleItem[] = [
+    { id: '1', title: "Nike Sneakers", released_date: "4 Feb 2024",  category: "5 Minute Read", article_url: "article", image_url: articleImg.src },
+    { id: '2', title: "Nike Sneakers", released_date: "4 Feb 2024",  category: "5 Minute Read", article_url: "article", image_url: articleImg.src },
+    { id: '3', title: "Nike Sneakers", released_date: "4 Feb 2024",  category: "5 Minute Read", article_url: "article", image_url: articleImg.src }
+]
 export const metadata: Metadata = {
     title: 'How It Works - Think Life',
     description: 'How It Works',

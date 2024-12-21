@@ -41,7 +41,16 @@ const nextConfig: NextConfig = {
         destination: '/comingSoon'
       },
     ]
-  }
+  },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'prod-files-secure.s3.us-west-2.amazonaws.com',
+        pathname: '/**', // Allow all paths under this domain
+      },
+    ],
+  },
 };
 
 export default nextConfig;
