@@ -37,7 +37,7 @@ import ArticleCard from '../articles/articleCard';
 
 export default function ArticlesHome() {
     // Use the custom hook to fetch articles
-    const { data: articleData, loading, error } = useNotionClient({ no_of_record: 3 });
+    const { data: articleData, loading, error } = useNotionClient({  fetchFor: "Article1"});
 
     // Handle loading and error states
     if (loading) return <p>Loading...</p>;

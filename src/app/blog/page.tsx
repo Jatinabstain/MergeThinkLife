@@ -71,29 +71,48 @@
 //     );
 // }
 
-
+// #############################################################################################################################################################################################
 
 "use client"; // This line makes it a client component
 
 import Header from '../common/header';
 import Footer from '../common/footer';
 import Search from '../common/search/page';
-import Link from 'next/link';
 import ArticleCard from '../common/components/articles/articleCard';
 import Pagination from '../common/components/pagination';
 import Slider from '../common/slider/page';
 import useNotionClient from '../common/components/NotionClient'; // Adjust the path as necessary
+import BlogTabs from '../common/components/blog/blogTabs';
+import { categoryItem } from '@/types/categoryTypes'; // Import categoryItem type
+
 
 export default function Blog() {
     // Fetch 3 articles for articles
-    const { data: articles, loading: loadingArticles, error: errorArticles } = useNotionClient({ no_of_record: 3 });
+    // const { data: articles, loading: loadingArticles, error: errorArticles } = useNotionClient({ no_of_record: 3, fetchCategories:1});
+    const { data: articles, loading: loadingArticles, error: errorArticles } = useNotionClient({ fetchFor: "Article1"});
     
     // Fetch all articles for articles2 (null for no_of_record)
-    const { data: articles2, loading: loadingArticles2, error: errorArticles2 } = useNotionClient({ no_of_record: 0 });
+    // const { data: articles2, loading: loadingArticles2, error: errorArticles2 } = useNotionClient({ no_of_record: 0 , fetchCategories:1});
+    const { data: articles2, loading: loadingArticles2, error: errorArticles2 } = useNotionClient({ fetchFor: "Article2"});
+
+   
+    // Fetch all articles for articles2 (null for no_of_record)
+    // const { data: categories, loading: loadingCategories, error: errorCategories } = useNotionClient({ fetchFor: "Categories" });
+
+    const { data: categoriesData, loading: loadingCategories, error: errorCategories } = useNotionClient({ fetchFor: "Categories" });
+
+    
 
     // Combine loading and error states
-    const loading = loadingArticles || loadingArticles2;
-    const error = errorArticles || errorArticles2;
+    const loading = loadingArticles || loadingArticles2 || loadingCategories;
+    const error = errorArticles || errorArticles2 || errorCategories;
+
+    // Transform categoriesData (NotionPage[]) to categoryItem[]
+    const categories: categoryItem[] = categoriesData.map((category) => ({
+        id: parseInt(category.id), // Ensure id is a number
+        name: category.title, // Assuming title is the name you want
+        href: `/blog?category=${category.title.replace(/\s+/g, '-').toLowerCase()}` // Create href based on title
+    }));
 
     // Handle loading and error states
     if (loading) return <p>Loading...</p>;
@@ -110,15 +129,7 @@ export default function Blog() {
             <Header />
             <div className="mx-auto max-w-7xl px-8">
                 <Search />
-                <div className="blog_tabs max-w-[636px] mb-16 mx-auto">
-                    <div className="flex gap-x-9 lg:justify-center items-center flex-wrap lg:gap-y-0 gap-y-6">
-                        <Link href="blog" className='blog_tab_link active'>All</Link>
-                        <Link href="blogCategory" className='blog_tab_link'>Life Insurance</Link>
-                        <Link href="#" className='blog_tab_link'>Work-Life</Link>
-                        <Link href="#" className='blog_tab_link'>Wellness</Link>
-                        <Link href="#" className='blog_tab_link'>Money</Link>
-                    </div>
-                </div>
+                <BlogTabs categories={categories} />
 
                 <section className='mb-32'>
                     <div className="article_heading flex gap-[10.67px] items-center mb-4">
@@ -147,3 +158,4 @@ export default function Blog() {
         </>
     );
 }
+
