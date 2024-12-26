@@ -11,7 +11,7 @@ export default function termsConditions() {
     return (
         <>
             <Header />
-            <div className="mx-auto max-w-7xl px-8">
+            <div className="mx-auto max-w-[1200px] px-8">
                 <div className="page_heading mt-16 mb-9">
                     <h3><span>Terms and Conditions</span></h3>
                 </div>

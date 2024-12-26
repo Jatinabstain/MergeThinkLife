@@ -33,7 +33,7 @@ export default function products() {
         <>
             <Header />
             <section className="page_section pb-[128px] pt-16">
-                <div className="mx-auto max-w-7xl px-8">
+                <div className="mx-auto max-w-[1200px] px-8">
                     <div className="page_heading mb-[105px]">
                         <h3>Our <span>Products</span></h3>
                     </div>

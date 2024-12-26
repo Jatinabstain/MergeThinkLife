@@ -1,24 +1,16 @@
 "use client";
-
 import { useState } from 'react';
-
 import Header from '../common/header';
 import Footer from '../common/footer';
 import Image from 'next/image';
 import article from '../../../public/assets/article.jpg';
 import insurance from '../../../public/assets/insurance.jpg';
-import { ArticleItem } from "@/types/articleCardTypes";
-import articleImg from '../../../public/assets/card-1.jpg';
 import adsImg from '../../../public/assets/ads.jpg';
 import arrowDown from '../../../public/assets/arrow-down.svg';
 import ArticleCard from '../common/components/articles/articleCard';
 import Link from 'next/link';
-
-// const articles: ArticleItem[] = [
-//     { id: '1', title: "Nike Sneakers", date: "4 Feb 2024", content: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint.  Amet minim mollit non deserunt", time: "5 Minute Read", href: "article", image: articleImg.src },
-//     { id: '2', title: "Nike Sneakers", date: "4 Feb 2024", content: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint.  Amet minim mollit non deserunt", time: "5 Minute Read", href: "article", image: articleImg.src },
-//     { id: '3', title: "Nike Sneakers", date: "4 Feb 2024", content: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint.  Amet minim mollit non deserunt", time: "5 Minute Read", href: "article", image: articleImg.src }
-// ]
+import { ArticleItem } from '@/types/articleCardTypes';
+import articleImg from '../../../public/assets/card-1.jpg';
 
 
 const articles: ArticleItem[] = [
@@ -26,7 +18,6 @@ const articles: ArticleItem[] = [
     { id: '2', title: "Nike Sneakers", released_date: "4 Feb 2024",  category: "5 Minute Read", article_url: "article", image_url: articleImg.src },
     { id: '3', title: "Nike Sneakers", released_date: "4 Feb 2024",  category: "5 Minute Read", article_url: "article", image_url: articleImg.src }
 ]
-
 export default function Article() {
     const [isSidebarVisible, setSidebarVisible] = useState(true); // State to manage sidebar visibility
 
@@ -37,7 +28,7 @@ export default function Article() {
     return (
         <>
             <Header />
-            <div className="mx-auto max-w-7xl px-8">
+            <div className="mx-auto max-w-[1200px] px-8">
                 <div className="mb-[102px] mt-16">
                     <Image src={article} alt="about us" className='page_img max-h-[524px] w-full' />
                 </div>

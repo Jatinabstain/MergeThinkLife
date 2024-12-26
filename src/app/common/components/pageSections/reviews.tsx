@@ -23,23 +23,26 @@ export default function Reviews() {
 
     return (
         <section className="page_section pb-[128px]">
-            <div className="mx-auto max-w-7xl px-8">
+            <div className="mx-auto max-w-[1200px] px-8">
                 <div className="heading mb-8">
                     <h3>What People Say About Us</h3>
                 </div>
 
-                <div ref={masonryContainer} className="grid items-start gap-4 lg:grid-cols-4 md:grid-cols-3 md:gap-6 justify-center">
+                {/* <div ref={masonryContainer} className="grid items-start gap-4 lg:grid-cols-4 md:grid-cols-3 md:gap-6 justify-center"> */}
+                <div ref={masonryContainer} className="flex flex-wrap gap-y-4 items-stretch1 justify-center lg:review_grids">
                     {reviewContent.map((item) => (
-                        <div key={item.name} className="review_card">
-                            <div className="flex gap-5">
-                                <Image src={item.userImg} alt='user image' className='review_uesr' />
-                                <div className="review_head">
-                                    <h3>{item.name}</h3>
-                                    <Image src={item.rating} alt='rating' className='rating' />
+                        <div key={item.name} className="lg:basis-1/4 md:basis-1/2 px-[19px]">
+                            <div className="review_card">
+                                <div className="flex gap-5">
+                                    <Image src={item.userImg} alt='user image' className='review_uesr' />
+                                    <div className="review_head">
+                                        <h3>{item.name}</h3>
+                                        <Image src={item.rating} alt='rating' className='rating' />
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="review_content mt-5">
-                                <p>{item.content}</p>
+                                <div className="review_content mt-5">
+                                    <p>{item.content}</p>
+                                </div>
                             </div>
                         </div>
                     ))}

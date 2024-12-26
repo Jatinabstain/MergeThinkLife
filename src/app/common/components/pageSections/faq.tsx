@@ -13,7 +13,7 @@ const accordion: AccordionItem[] = [
 export default function Faq() {
     return (
         <section className="page_section pb-[128px]">
-            <div className="mx-auto max-w-7xl px-8">
+            <div className="mx-auto max-w-[1200px] px-8">
                 <div className="heading mb-8">
                     <h3>Frequently Asked Questions</h3>
                     <p className="lg:w-2/4 mx-auto">Getting life insurance is a big decision, and it&apos;s one you should make with care. Here are a few questions to help you understand life insurance and what it can do for you and your family.</p>

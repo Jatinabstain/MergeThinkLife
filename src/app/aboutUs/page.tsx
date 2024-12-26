@@ -17,7 +17,7 @@ export default function aboutUs() {
     return (
         <>
             <Header />
-            <div className="mx-auto max-w-7xl px-8">
+            <div className="mx-auto max-w-[1200px] px-8">
                 <div className="my-16">
                     <Image src={aboutUsImg} alt="about us" className='page_img' />
                 </div>
@@ -34,7 +34,7 @@ export default function aboutUs() {
                 </div>
             </div>
             <div className="py-16 bg_violet">
-                <div className="mx-auto max-w-7xl px-8">
+                <div className="mx-auto max-w-[1200px] px-8">
                     <div className="card_heading">
                         <h3>Our Values</h3>
                     </div>

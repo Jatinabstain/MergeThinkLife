@@ -9,7 +9,7 @@ const aboutContent = [
 export default function AboutUs() {
     return (
         <section className="page_section pb-[128px]">
-            <div className="mx-auto max-w-7xl px-8">
+            <div className="mx-auto max-w-[1200px] px-8">
                 <div className="heading mb-8">
                     <h3>About Us</h3>
                     <p className="lg:w-2/4 mx-auto ">Think Life is a leading life insurance company providing a range of insurance policies, including critical illness, income protection, and more! We have a long history of financial strength and stability, and thousands of people across the USA trust us to secure their and their loved ones’ financial futures.</p>

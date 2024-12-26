@@ -14,7 +14,7 @@ export default function error500() {
     return (
         <>
             <Header />
-            <div className="mx-auto max-w-7xl px-8">
+            <div className="mx-auto max-w-[1200px] px-8">
                 <div className="min-h-screen bubble_bg flex flex-wrap flex-col justify-center">
                     <div className="comming_soon">
                         <Image src={errorImg} alt='coming soon' className='mx-auto mb-5' />

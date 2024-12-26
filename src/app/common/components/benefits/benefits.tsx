@@ -9,7 +9,7 @@ import screen from "../../../../../public/assets/screen.svg";
 export default function benefits() {
     return (
         <>
-            <div className="grid lg:grid-cols-[auto,25%,25%] lg:gap-y-0 gap-y-[38px] gap-x-[38px] mb-8 items-center">
+            <div className="grid lg:grid-cols-[auto,23%,23%] lg:gap-y-0 gap-y-[38px] gap-x-[38px] mb-8 items-center">
                 <div>
                     <Image
                         src={umbrella}
@@ -44,7 +44,7 @@ export default function benefits() {
                     <p className="font-normal text-[#00000099] text-base text-center">Our team is available 24/7 via phone or email if you ever need help navigating the process or filing claims during an emergency.</p>
                 </div>
             </div>
-            <div className="grid lg:grid-cols-[25%,25%,auto] lg:gap-y-0 gap-y-[38px] gap-x-[38px] mb-8 items-center">
+            <div className="grid lg:grid-cols-[23%,23%,auto] lg:gap-y-0 gap-y-[38px] gap-x-[38px] mb-8 items-center">
                 <div className="bg_violet pt-[20px] px-6 pb-5 rounded-xl lg:min-h-[322px] h-full">
                     <div className="icon">
                         <Image

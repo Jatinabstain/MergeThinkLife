@@ -13,7 +13,7 @@ export const MainModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ 
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[999]" onClick={handleOverlayClick}>
-            <div className="modal_content">
+            <div className="modal_content lg:w-full w-[90%]">
                 <Image src={check} alt='check' className='mx-auto mb-6' />
                 <h2>Thank you for getting in touch!</h2>
                 <p>We will notify you as soon as possible. <br /> Have a great day!</p>

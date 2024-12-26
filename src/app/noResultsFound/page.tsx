@@ -8,7 +8,7 @@ export default function noResultsFound() {
     return (
         <>
             <Header />
-            <div className="mx-auto max-w-7xl px-8">
+            <div className="mx-auto max-w-[1200px] px-8">
                 <div className="min-h-screen bubble_bg flex flex-wrap flex-col">
                     <Search />
                     <div className="comming_soon mt-12">
