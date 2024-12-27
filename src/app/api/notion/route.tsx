@@ -25,15 +25,15 @@ export async function GET(request: Request) {
     // Get the no_of_record parameter from the query string
     const no_of_record = url.searchParams.get("no_of_record");
 
-    const ID = url.searchParams.get("ID");
+    const atr_prm = url.searchParams.get("atr_prm");
     try {
         // const databaseId = "YOUR_DATABASE_ID"; // Replace with your actual database ID
         const databaseId = "15bb24f4-b447-807d-8e7c-e1f8aa6ce4e0";
 
 
         // If ID is provided, fetch the specific article
-        // if (ID) {
-        //     const SingleResponse = await notion.pages.retrieve({ page_id: '15bb24f4-b447-80e2-b670-c61bba17303f' });
+        // if (atr_prm) {
+        //     const SingleResponse = await notion.pages.retrieve({ page_id: atr_prm });
            
         //     // Check if the response is valid and contains the necessary properties
         //     if ('properties' in SingleResponse) {
@@ -89,15 +89,15 @@ export async function GET(request: Request) {
             database_id: databaseId,
         });
 
-        // Handle fetching a specific article by ID
-        if (ID) {
+        // Handle fetching a specific article by ID : SingleArticle
+        if (atr_prm) {
             const articles = response.results as PageObjectResponse[]; // Cast to PageObjectResponse array
 
             // Filter the articles to find the one with the matching ID
-            const article = articles.find(page => page.id === "15bb24f4-b447-80e2-b670-c61bba17303f");
+            const SingleArticle = articles.find(page => page.id === atr_prm);
 
-            if (article) {
-                const properties = article.properties;
+            if (SingleArticle) {
+                const properties = SingleArticle.properties;
 
                 // Extract article details
                 let title = "Untitled";
@@ -123,14 +123,15 @@ export async function GET(request: Request) {
                     category = properties.Tags.multi_select.map(tag => tag.name); // Get the names of the tags
                 }
 
+
                 // Fetch Image URL
-                if (article.cover && article.cover.type === 'external' && article.cover.external) {
-                    image_url = article.cover.external.url; // Get the external image URL
+                if (SingleArticle.cover && SingleArticle.cover.type === 'file' && SingleArticle.cover.file) {
+                    image_url = SingleArticle.cover.file.url; // Get the image URL
                 }
 
                 // Return the article details
                 return new Response(JSON.stringify({
-                    id: article.id,
+                    id: SingleArticle.id,
                     title,
                     released_date,
                     category: category.join(', '), // Join categories into a string

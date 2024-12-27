@@ -14,7 +14,7 @@ export default function ArticleCard({ articles }: ArticleCardProps) {
     return (
         <div className="grid items-start gap-[38px] lg:grid-cols-3 md:grid-cols-2">
             {articles.map((item) => (
-                <div key={item.id}>
+                <div key={item.id} className="h-full">
                     <Link href={'/article?atr_prm='+item.id}>
                         <div className="article_card">
                             <div className="position-relative">

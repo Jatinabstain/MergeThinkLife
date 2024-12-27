@@ -9,13 +9,11 @@ import {
     Bars3Icon,
     XMarkIcon,
 } from '@heroicons/react/24/outline'
-import Image from 'next/image'
-import logo from '../../../public/assets/logo.svg'
-import Link from "next/link";
 import WebMenu from './components/header/mainMenu/WebMenu';
 import MobileMenu from './components/header/mainMenu/MobileMenu';
 import ActionMenu from './components/header/ActionMenu';
 import { MenuItem } from '@/types/types';
+import BrandLogo from './components/brandLogo';
 
 
 const menus: MenuItem[] = [
@@ -33,12 +31,7 @@ export default function Header() {
         <header className="bg-white border-b border-gray-300">
             <nav aria-label="Global" className="mx-auto flex max-w-[1200px] items-center justify-between lg:px-8">
                 <div className="flex lg:flex-1">
-                    <Link href="/" className="-m-1.5 p-1.5">
-                        <Image
-                            src={logo}
-                            alt="Logo"
-                        />
-                    </Link>
+                    <BrandLogo />
                 </div>
                 <div className="flex lg:hidden">
                     <button
@@ -60,12 +53,7 @@ export default function Header() {
                 <div className="fixed inset-0 z-10" />
                 <DialogPanel className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
                     <div className="flex items-center justify-between">
-                        <Link href="/" className="-m-1.5 p-1.5">
-                            <Image
-                                src={logo}
-                                alt="Logo"
-                            />
-                        </Link>
+                        <BrandLogo />
                         <button
                             type="button"
                             onClick={() => setMobileMenuOpen(false)}

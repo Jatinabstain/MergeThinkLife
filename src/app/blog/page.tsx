@@ -7,13 +7,13 @@ import Search from '../common/search/page';
 import Image from 'next/image';
 import HeadingStar from '../../../public/assets/heading-star.svg'
 import ArticleCard from '../common/components/articles/articleCard';
-import Pagination from '../common/components/pagination';
 import Slider from '../common/slider/page';
 import BlogTabs from '../common/components/blog/blogTabs';
 import { CategoryItem } from '@/types/categoryTypes';
 import { ArticleItem } from '@/types/articleCardTypes';
 import useNotionClient from '../common/components/NotionClient'; 
 import Loader from '../common/components/loader/loader';
+import Pagination from '../common/components/pagination';
 
 
 // export const metadata: Metadata = {

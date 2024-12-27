@@ -1,7 +1,7 @@
 'use client'
 
 import { usePathname } from 'next/navigation';
-import BrandLogo from './components/brandLogoLight';
+import BrandLogoLight from './components/brandLogoLight';
 import Subscribe from './components/subscribe';
 import Image from 'next/image';
 import facebook from '../../../public/assets/facebook.svg';
@@ -18,6 +18,7 @@ import Link from "next/link";
 const menus = [
     { name: 'Home', href: '/' },
     { name: 'Products', href: '/products' },
+    { name: 'Blog', href: '/products' },
     { name: 'About Us', href: '/about-us' },
     { name: 'How It Works', href: '/how-it-works' },
     { name: 'Privacy Policy', href: '/privacy-policy' },
@@ -29,44 +30,46 @@ export default function Footer() {
     return (
         <>
             <footer className='footer'>
-                <div className="mx-auto max-w-[1200px] px-8">
-                    <div className="pt-[91px] md:pb-[99px]">
-                        <div className="flex md:flex-row flex-col lg:gap-y-0 gap-[38px]">
-                            <div className="lg:w-1/2"> 
-                                <BrandLogo />
+                <div className="mx-auto max-w-[1200px] md:px-0">
+                    <div className="pt-[50px] md:pb-[28px]">
+                        <div className="flex md:flex-row lg:flex-nowrap md:flex-wrap flex-col lg:gap-y-0 gap-[20px]">
+                            <div className="lg:w-[55%] lg:pe-[100px] md:w-2/4"> 
+                                <div className="md:p-[10px]">
+                                    <BrandLogoLight />
+                                </div>
                                 <Subscribe />
                             </div>
-                            <div className="lg:w-1/5">
+                            <div className="lg:w-1/5 md:w-[47%]">
                                 <div className="footer_widget">
-                                    <h3 className='text-base font-normal mb-11'>Navigation</h3>
+                                    <h3 className='text-base leading-4 font-medium mb-9'>Navigation</h3>
                                     <ul>
                                         {menus.map((item) => (
                                             <li key={item.name}>
-                                                <Link href={item.href} className={`${pathname === item.href ? 'active' : ''}`}>{item.name}</Link>
+                                                <Link href={item.href} className={`leading-4 lg:p-0 md:py-3 ${pathname === item.href ? 'active' : ''}`}>{item.name}</Link>
                                             </li>
                                         ))}
                                     </ul>
                                 </div>
                             </div>
-                            <div className="lg:w-1/5">
-                                <div className="footer_widget">
-                                    <h3 className='text-base font-normal mb-11'>Get in touch</h3>
+                            <div className="lg:w-1/4 md:w-1/2">
+                                <div className="footer_widget get_in_touch">
+                                    <h3 className='text-base leading-4 font-medium mb-9'>Get in touch</h3>
                                     <ul>
                                         <li>
-                                            <Link href="#" className='flex gap-3 items-start'>
+                                            <Link href="#" className='leading-4 flex gap-[22px] items-center'>
                                                 <Image
                                                 src={call}
                                                 alt="call"
                                             /> +1 (319) 555-0115</Link>
                                         </li>
                                         <li>
-                                        <Link href="#" className='flex gap-3 items-start'><Image
+                                        <Link href="#" className='leading-4 flex gap-[22px] items-start'><Image
                                                 src={mail}
                                                 alt="mail"
                                             /> info@thinklife.com</Link>
                                         </li>
                                         <li>
-                                        <Link href="#" className='flex gap-3 items-start'><Image
+                                        <Link href="#" className='leading-4 flex gap-[22px] items-start'><Image
                                                 src={location}
                                                 alt="location"
                                             /> 4517 Washington Ave. Manchester, Kentucky 39495</Link>
@@ -74,10 +77,10 @@ export default function Footer() {
                                     </ul>
                                 </div>
                             </div>
-                            <div className="lg:w-1/5">
-                                <div className="footer_widget">
-                                    <h3 className='text-base font-normal mb-11'>Follow Us</h3>
-                                    <div className="flex gap-[18px] mb-5">
+                            <div className="lg:w-1/5 md:w-1/5">
+                                <div className="footer_widget social_media">
+                                    <h3 className='text-base leading-4 font-medium mb-9'>Follow Us</h3>
+                                    <div className="flex gap-[20px] mb-5 pb-[6.5px] items-center">
                                         <Link href="#">
                                             <Image
                                                 src={facebook}
@@ -97,7 +100,7 @@ export default function Footer() {
                                             />
                                         </Link>
                                     </div>
-                                    <div className="flex gap-[18px] mb-5">
+                                    <div className="flex gap-[20px] mb-5 pb-[6.5px]">
                                         <Link href="#">
                                             <Image
                                                 src={instagram}
@@ -121,11 +124,11 @@ export default function Footer() {
                             </div>
                         </div>
                     </div>
-                    <p className="text-gray-100 text-sm font-normal pb-[117px]">Assurity is a marketing name for the mutual holding company Assurity Group, Inc. and its subsidiaries. Those subsidiaries include but are not limited to: Assurity Life Insurance Company and Assurity Life Insurance Company of New York. Insurance products and services are offered by Assurity Life Insurance Company in all states except New York. In New York, insurance products and services are offered by Assurity Life Insurance Company of New York, Albany, NY. Product availability, features and rates may vary by state.</p>
+                    <p className="text-gray-100 text-sm font-normal md:pb-[50px] pb-[100px]">Assurity is a marketing name for the mutual holding company Assurity Group, Inc. and its subsidiaries. Those subsidiaries include but are not limited to: Assurity Life Insurance Company and Assurity Life Insurance Company of New York. Insurance products and services are offered by Assurity Life Insurance Company in all states except New York. In New York, insurance products and services are offered by Assurity Life Insurance Company of New York, Albany, NY. Product availability, features and rates may vary by state.</p>
                 </div>
             </footer>
             <section className='footer_bottom py-[31px]'>
-                <div className="mx-auto max-w-[1200px] px-8">
+                <div className="mx-auto max-w-[1200px] md:px-0 px-[10px]">
                     <p className='text-sm font-normal text-white'>© ThinkLife 2024, All rights reserved</p>
                 </div>
             </section>
