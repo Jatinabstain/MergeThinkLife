@@ -11,16 +11,16 @@ export interface NotionPage {
     category: string;
     image_url: string;
     article_url: string;
-    href:string;
+    href: string;
 }
 
 interface NotionClientProps {
     fetchFor: string | null; // Specify what data to fetch
-    ArticleId?: string | null; 
+    toFetch?: string | null;
 }
 
 // Custom hook to fetch Notion data
-const useNotionClient = ({ fetchFor , ArticleId }: NotionClientProps) => {
+const useNotionClient = ({ fetchFor, toFetch }: NotionClientProps) => {
     const [data, setData] = useState<NotionPage[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
@@ -32,11 +32,18 @@ const useNotionClient = ({ fetchFor , ArticleId }: NotionClientProps) => {
             try {
                 let url: string;
 
-               
+
                 // Determine the URL based on the fetchFor value
                 switch (fetchFor) {
                     case "Categories":
                         url = `/api/notion?fetchCategories=categories`;
+                        break;
+                    case "CategoryArticle":
+                        if (toFetch) {
+                            url = `/api/notion?fetch_cat_art=${toFetch}`; // Fetch article by Category
+                        } else {
+                            url = `/api/notion?no_of_record=0`; // Fetch all articles
+                        }
                         break;
                     case "Article1":
                         url = `/api/notion?no_of_record=3`; // Fetch 3 articles
@@ -45,8 +52,8 @@ const useNotionClient = ({ fetchFor , ArticleId }: NotionClientProps) => {
                         url = `/api/notion?no_of_record=0`; // Fetch all articles
                         break;
                     case "SingleArticle":
-                        if (ArticleId) {
-                            url = `/api/notion?atr_prm=${ArticleId}`; // Fetch single article by ID
+                        if (toFetch) {
+                            url = `/api/notion?fetch_art=${toFetch}`; // Fetch single article by ID
                         } else {
                             setError("ArticleId is required for fetching a single article.");
                             return; // Exit early if ArticleId is not provided
@@ -79,7 +86,7 @@ const useNotionClient = ({ fetchFor , ArticleId }: NotionClientProps) => {
         };
 
         fetchData();
-    }, [fetchFor,ArticleId]);
+    }, [fetchFor, toFetch]);
 
     return { data, loading, error }; // Return data, loading state, and error
 };

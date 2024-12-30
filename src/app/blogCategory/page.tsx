@@ -87,7 +87,7 @@ export default function BlogCategory() {
             <Header />
             <div className="mx-auto max-w-[1200px] px-8">
                 <Search />
-                <BlogTabs category={categories} />
+                <BlogTabs category={categories} active_cat={null}/>
 
                 <section className='mb-16'>
                     <div className="article_heading flex gap-[10.67px] items-center mb-4">

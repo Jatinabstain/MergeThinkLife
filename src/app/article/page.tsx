@@ -25,7 +25,7 @@ function SingleArticleFunction() {
 
     console.log(atrPrm);
 
-    const { data, loading: loadingSingleArticle, error: errorSingleArticle } = useNotionClient({ fetchFor: "SingleArticle", ArticleId: atrPrm });
+    const { data, loading: loadingSingleArticle, error: errorSingleArticle } = useNotionClient({ fetchFor: "SingleArticle", toFetch: atrPrm });
 
     const SingleArticle = data as unknown as ArticleItem | null;
 
