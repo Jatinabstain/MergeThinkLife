@@ -1,5 +1,5 @@
 "use client";
-import { useState,useEffect  } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Header from '../common/header';
 import Footer from '../common/footer';
 import Image from 'next/image';
@@ -13,22 +13,19 @@ import { useSearchParams } from 'next/navigation';
 import placeholder from '../../../public/assets/placeholder.jpg';
 import { ArticleItem } from '@/types/articleCardTypes';
 
-
-export default function Article() {
+function SingleArticleFunction() {
     const searchParams = useSearchParams();
-    // const atrPrm = searchParams.get('atr_prm') || ''; // Retrieve the 'atr_prm' value
     const [atrPrm, setAtrPrm] = useState<string | null>(null);
-    
+
     useEffect(() => {
         // Get the 'atr_prm' query parameter value when the component mounts or the searchParams change
         const atrPrmFromUrl = searchParams.get('atr_prm');
         setAtrPrm(atrPrmFromUrl); // Update state with the new 'atr_prm'
     }, [searchParams]); // Dependency array ensures this effect runs when `searchParams` changes
 
-    
-    const { data: articles, loading: loadingArticles, error: errorArticles } = useNotionClient({ fetchFor: "Article1" });
+    console.log(atrPrm);
 
-    const {data,loading: loadingSingleArticle,error: errorSingleArticle} = useNotionClient({ fetchFor: "SingleArticle",ArticleId: atrPrm});
+    const { data, loading: loadingSingleArticle, error: errorSingleArticle } = useNotionClient({ fetchFor: "SingleArticle", ArticleId: atrPrm });
 
     const SingleArticle = data as unknown as ArticleItem | null;
 
@@ -38,9 +35,11 @@ export default function Article() {
         setSidebarVisible(!isSidebarVisible); // Toggle the visibility
     };
 
-    const loading = loadingArticles || loadingSingleArticle;
-    const error = errorArticles || errorSingleArticle;
 
+    const loading = loadingSingleArticle;
+    const error = errorSingleArticle;
+
+console.log(error,loading);
     // Handle loading and error states
     if (loading) return <><Loader /></>;
     if (error) {
@@ -50,13 +49,10 @@ export default function Article() {
             </div>
         );
     }
-
     return (
         <>
-            <Header />
-                 
             {SingleArticle ? (
-                <div className="mx-auto max-w-[1200px] px-8">
+                <Suspense fallback={<Loader />}>
                     <div className="mb-[102px] mt-16">
                         {SingleArticle.image_url && SingleArticle.image_url.length > 0 ? (
                             <Image src={SingleArticle.image_url} alt="" className="article_image" width={1140} height={524} />
@@ -120,25 +116,57 @@ export default function Article() {
                             </div>
                         </div>
                     </div>
-
-                    <section className='mb-32'>
-                        <div className="article_heading flex gap-[10.67px] items-center mb-4">
-                            <h3>Our Recent Articles</h3>
-                        </div>
-                        <ArticleCard articles={articles} />
-                    </section>
-
-                </div>
+                </Suspense>
             ) : (
-                <div className="mx-auto max-w-[1200px] px-8">
-                    <div className="mb-[102px] mt-16">
-                        <p>No data Found</p>
-                        </div>
+                <div className="mb-[102px] mt-16">
+                    <p>No data Found</p>
                 </div>
             )}
+
+        </>
+    );
+}
+
+export default function Article() {
+
+    const { data: articles, loading: loadingArticles, error: errorArticles } = useNotionClient({ fetchFor: "Article1" });
+
+
+
+    const loading = loadingArticles;
+    const error = errorArticles;
+    console.log(error,loading);
+
+    // Handle loading and error states
+    // if (loading) return <><Loader /></>;
+    // if (error) {
+    //     return (
+    //         <div>
+    //             <p>Error fetching articles: {error}</p>
+    //         </div>
+    //     );
+    // }
+
+    return (
+        <>
+            <Header />
+            <div className="mx-auto max-w-[1200px] px-8">
+                <Suspense fallback={<Loader />}>
+                    <SingleArticleFunction />
+                </Suspense>
+
+
+                <section className='mb-32'>
+                    <div className="article_heading flex gap-[10.67px] items-center mb-4">
+                        <h3>Our Recent Articles</h3>
+                    </div>
+                    <ArticleCard articles={articles} />
+                </section>
+            </div>
 
 
             <Footer />
         </>
     );
 }
+
