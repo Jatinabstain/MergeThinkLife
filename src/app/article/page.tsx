@@ -39,7 +39,7 @@ function SingleArticleFunction() {
     const loading = loadingSingleArticle;
     const error = errorSingleArticle;
 
-console.log(error,loading);
+    console.log(error, loading);
     // Handle loading and error states
     if (loading) return <><Loader /></>;
     if (error) {
@@ -135,7 +135,7 @@ export default function Article() {
 
     const loading = loadingArticles;
     const error = errorArticles;
-    console.log(error,loading);
+    console.log(error, loading);
 
     // Handle loading and error states
     // if (loading) return <><Loader /></>;

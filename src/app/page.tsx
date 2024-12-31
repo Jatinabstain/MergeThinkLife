@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Image from "next/image";
-import Form from "next/form";
+
 import Header from "./common/header";
 // import Loader from "./common/components/loader/loader";
 import bannerImg from '../../public/assets/banner-img.png'
@@ -20,16 +20,73 @@ import life from '../../public/assets/life.svg';
 import { MainModal } from './common/components/MainModal/MainModal';
 
 const bigCards: bigCardItem[] = [
-    { icon: short, name: 'Short-Term Disability Insurance', content: 'Unexpected illness or injury can disrupt your life and income. Our Short-Term Disability Insurance offers financial support by replacing a portion of your income during recovery. Benefit from fast approval, customizable coverage options, and peace of mind knowing that your essential expenses are covered while you focus on getting better.', href: 'short-term-disability-insurance' },
-    { icon: life, name: 'Term Life Insurance', content: "Our Term Life Insurance provides affordable coverage for a specified period, ensuring your family’s financial security in the event of your passing. Choose a term length that fits your needs, with guaranteed level premiums and substantial death benefits. Plan for the future and safeguard your loved ones' financial stability today.", href: 'term-life-insurance' },
+  { icon: short, name: 'Short-Term Disability Insurance', content: 'Unexpected illness or injury can disrupt your life and income. Our Short-Term Disability Insurance offers financial support by replacing a portion of your income during recovery. Benefit from fast approval, customizable coverage options, and peace of mind knowing that your essential expenses are covered while you focus on getting better.', href: 'short-term-disability-insurance' },
+  { icon: life, name: 'Term Life Insurance', content: "Our Term Life Insurance provides affordable coverage for a specified period, ensuring your family’s financial security in the event of your passing. Choose a term length that fits your needs, with guaranteed level premiums and substantial death benefits. Plan for the future and safeguard your loved ones' financial stability today.", href: 'term-life-insurance' },
 ]
 
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const openModal = () => setIsModalOpen(true);
+  const [modalMessage, setModalMessage] = useState<string>('We will notify you as soon as possible. Have a great day!');
+  const [modalTitle, setModalTitle] = useState<string>('Thank you for getting in touch');
+  const [errors, setErrors] = useState({
+    fName: '',
+    lName: '',
+    email: '',
+    insuranceType: '',
+  });
+  //const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
-  
+
+  const validateForm = () => {
+
+    let isValid = true;
+    const errorMessages = {
+      fName: '',
+      lName: '',
+      email: '',
+      insuranceType: '',
+    };
+
+    const fName = (document.getElementById('fName') as HTMLInputElement).value;
+    const lName = (document.getElementById('lName') as HTMLInputElement).value;
+    const email = (document.getElementById('email') as HTMLInputElement).value;
+    const insuranceType = (document.getElementById('insuranceType') as HTMLSelectElement).value;
+
+    if (!fName) {
+      errorMessages.fName = 'First name is required.';
+      isValid = false;
+    }
+
+    if (!lName) {
+      errorMessages.lName = 'Last name is required.';
+      isValid = false;
+    }
+
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!email || !email.match(emailPattern)) {
+      errorMessages.email = 'Enter a valid email.';
+      isValid = false;
+    }
+
+    if (insuranceType === '0') {
+      errorMessages.insuranceType = 'Please select an insurance type.';
+      isValid = false;
+    }
+
+    setErrors(errorMessages);
+
+    if (isValid) {
+      setModalTitle('Thank you for getting in touch');
+      setModalMessage('We will notify you as soon as possible. Have a great day!');
+      setIsModalOpen(true);
+      (document.getElementById('fName') as HTMLInputElement).value = '';
+      (document.getElementById('lName') as HTMLInputElement).value = '';
+      (document.getElementById('email') as HTMLInputElement).value = '';
+      (document.getElementById('insuranceType') as HTMLSelectElement).value = '0';
+    }
+  };
+
   return (
     <>
       {/* <Loader /> */}
@@ -59,42 +116,85 @@ export default function Home() {
       </section>
       {/* Top banner end */}
 
-      {/* Search form start*/}
       <section className="search_form_bg">
         <div className="mx-auto max-w-[1200px] lg:px-8">
-          <Form action=''>
+          <form action='' method="POST">
             <div className="flex flex-wrap gap-y-5 items-center">
               <div className="form-group md:px-[19px] lg:basis-1/6 md:basis-1/3 w-full lg:ps-0">
                 <label htmlFor="fName" className="form-label md:left-[21px] left-5">First Name</label>
-                <input type="text" id="fName" className="form-control" placeholder="First Name" />
+                <input
+                  type="text"
+                  id="fName"
+                  className="form-control"
+                  placeholder="First Name"
+                  required
+                />
+                <div className="text-red-600 text-sm mt-2">   {errors.fName ? errors.fName : '\u00A0'}</div>
+
               </div>
               <div className="form-group md:px-[19px] lg:basis-1/6 md:basis-1/3 w-full">
                 <label htmlFor="lName" className="form-label md:left-[40px] left-5">Last Name</label>
-                <input type="text" id="lName" className="form-control" placeholder="Last Name" />
+                <input
+                  type="text"
+                  id="lName"
+                  className="form-control"
+                  placeholder="Last Name"
+                  required
+                />
+                <div className="text-red-600 text-sm mt-2">   {errors.lName ? errors.lName : '\u00A0'}</div>
+
               </div>
               <div className="form-group md:px-[19px] lg:basis-1/6 md:basis-1/3 w-full">
-                <label htmlFor="lName" className="form-label md:left-[40px] left-5">Email</label>
-                <input type="text" id="lName" className="form-control" placeholder="Email" />
+                <label htmlFor="email" className="form-label md:left-[40px] left-5">Email</label>
+                <input
+                  type="email"
+                  id="email"
+                  className="form-control"
+                  placeholder="Email"
+                  required
+                  pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                />
+                <div className="text-red-600 text-sm mt-2">   {errors.email ? errors.email : '\u00A0'}</div>
+
               </div>
               <div className="form-group md:px-[19px] lg:basis-1/3 md:basis-8/12 w-full">
                 <label htmlFor="insuranceType" className="form-label md:left-[40px] left-5">Insurance Type</label>
-                <select id="insuranceType" className="form-control form-select w-full">
-                  <option defaultValue='0'>Please Select</option>
+                <select
+                  id="insuranceType"
+                  className="form-control form-select w-full"
+                  required
+                >
+                  <option value="0" disabled>Please Select</option>
                   <option value="1">Insurance Type</option>
                   <option value="2">Short-Term Disability</option>
                   <option value="3">Term Life</option>
                 </select>
+                <div className="text-red-600 text-sm mt-2">   {errors.insuranceType ? errors.insuranceType : '\u00A0'}</div>
               </div>
               <div className="lg:basis-1/6 md:basis-1/3 w-full">
                 <div className="form-group md:px-[19px] lg:pe-0">
-                  <button onClick={openModal} className="btn_outline_big w-full">Continue</button>
+                  <button
+                    type="submit"
+                    className="btn_outline_big w-full"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      validateForm();
+                    }}
+                  >
+                    Continue
+                  </button>
+                  <div className="text-red-600 text-sm mt-2">   {'\u00A0'}</div>
                 </div>
               </div>
             </div>
-          </Form>
+          </form>
         </div>
       </section>
-      <MainModal isOpen={isModalOpen} onClose={closeModal} />
+
+
+
+
+      <MainModal title={modalTitle} message={modalMessage} isOpen={isModalOpen} onClose={closeModal} />
       {/* Search form end*/}
 
       {/* How it works start */}
@@ -168,19 +268,19 @@ export default function Home() {
       {/* Benefits End */}
 
       {/* About Us Start */}
-        <AboutUs />
+      <AboutUs />
       {/* About Us End */}
-      
+
       {/* Reviews Start */}
-        <Reviews />
+      <Reviews />
       {/* Reviews End */}
-      
+
       {/* Faq Start */}
-        <Faq />
+      <Faq />
       {/* Faq End */}
-      
+
       {/* Articles Start */}
-        <ArticlesHome />
+      <ArticlesHome />
       {/* Articles End */}
 
       <Footer />

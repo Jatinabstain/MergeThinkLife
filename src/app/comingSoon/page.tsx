@@ -16,6 +16,17 @@ export default function ComingSoon() {
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
 
+    // const [modalMessage, setModalMessage] = useState<string>('We will notify you as soon as possible. Have a great day!');
+    // const [modalTitle, setModalTitle] = useState<string>('Thank you for getting in touch');
+
+    // setModalTitle('Thank you for getting in touch');
+    //   setModalMessage('We will notify you as soon as possible. Have a great day!');
+    //   setIsModalOpen(true);
+
+     const modalMessage ='We will notify you as soon as possible. Have a great day!';
+    const modalTitle = 'Thank you for getting in touch';
+
+
     return (
         <>
             <Header />
@@ -47,7 +58,7 @@ export default function ComingSoon() {
                 </div>
             </div>
             <Footer />
-            <MainModal isOpen={isModalOpen} onClose={closeModal} />
+            <MainModal title={modalTitle} message={modalMessage} isOpen={isModalOpen} onClose={closeModal} />
         </>
     );
 }

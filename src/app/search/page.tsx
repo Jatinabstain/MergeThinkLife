@@ -3,7 +3,7 @@ import React, { useState, useEffect, Suspense } from 'react';
 
 import Header from '../common/header';
 import Footer from '../common/footer';
-import Search from '../common/search/page';
+import SearchInput from '../common/search/page';
 import ArticleCard from '../common/components/articles/articleCard';
 import Pagination from '../common/components/pagination';
 import BlogTabs from '../common/components/blog/blogTabs';
@@ -13,45 +13,44 @@ import { ArticleItem } from '@/types/articleCardTypes';
 import Loader from '../common/components/loader/loader';
 import { useSearchParams } from 'next/navigation';
 
-export default function BlogCategory() {
+export default function Search() {
 
    
     return (
         <>
             <Header />
-            <div className="mx-auto max-w-[1200px] px-8">
-                <Search />
-                {/* <BlogTabs category={categories} active_cat={null}/> */}
-                <Suspense fallback={<Loader />}>
-                    <BlogTabFunction />
-                </Suspense>
+                <div className="mx-auto max-w-[1200px] px-8">
 
+                    {/* Search */}
+                    <Suspense fallback={<Loader />}>
+                        <SearchFunction />
+                    </Suspense>
 
+                    {/* Blog */}
+                    <Suspense fallback={<Loader />}>
+                        <BlogTabFunction />
+                    </Suspense>
 
-
-
-
-                <Suspense fallback={<Loader />}>
-                    <ArticleFunction />
-                </Suspense>
-
-
-                {/* <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} /> */}
-            </div>
+                    {/* Articles */}
+                    <Suspense fallback={<Loader />}>
+                        <ArticleFunction />
+                    </Suspense>
+                </div>
             <Footer />
         </>
     );
 }
 
+// Article Function
 function ArticleFunction() {
     const searchParams = useSearchParams();
     const [categoryParam, setCategoryParam] = useState<string | null>(null);
 
     useEffect(() => {
-        // Get the 'fetch_cat_art' query parameter value when the component mounts or the searchParams change
-        const categoryParam = searchParams.get('fetch_cat_art');
+        // Get the 'category' query parameter value when the component mounts or the searchParams change
+        const categoryParam = searchParams.get('category');
 
-        setCategoryParam(categoryParam); // Update state with the new 'fetch_cat_art'
+        setCategoryParam(categoryParam); // Update state with the new 'category'
     }, [searchParams]); // Dependency array ensures this effect runs when `searchParams` changes
 
     //  to fetch from Notion APi
@@ -112,14 +111,15 @@ function ArticleFunction() {
     );
 }
 
+// Blog Tab Function
 function BlogTabFunction() {
     const searchParams = useSearchParams();
     const [active_cat, setactive_cat] = useState<string | null>('all');
 
     useEffect(() => {
-        // Get the 'fetch_cat_art' query parameter value when the component mounts or the searchParams change
-        const categoryParam = searchParams.get('fetch_cat_art');
-        setactive_cat(categoryParam); // Update state with the new 'fetch_cat_art'
+        // Get the 'category' query parameter value when the component mounts or the searchParams change
+        const categoryParam = searchParams.get('category');
+        setactive_cat(categoryParam); // Update state with the new 'category'
     }, [searchParams]); // Dependency array ensures this effect runs when `searchParams` changes
 
     const { data: categoriesData, loading: loadingCategories, error: errorCategories } = useNotionClient({ fetchFor: "Categories" });
@@ -150,3 +150,12 @@ function BlogTabFunction() {
         </>
     );
 }
+
+function SearchFunction() {
+    const searchParam = useSearchParams().toString();
+    console.log(searchParam);
+    return (
+        <SearchInput  />
+    );
+}
+
