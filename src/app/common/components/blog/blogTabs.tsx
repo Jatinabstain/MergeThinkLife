@@ -30,7 +30,7 @@ export default function BlogTabs({ category , active_cat}: CategoriesProps) {
                 {/* Dynamic Link */}
                 {category.map((item) => (
                     <div key={item.id || item.name}>
-                        <Link href={`/blog?fetch_cat_art=`+item.href} className={`blog_tab_link ${pathname === item.href ? 'active' : ''}`}>{item.name}</Link>
+                        <Link href={`/blogCategory?fetch_cat_art=`+item.href} className={`blog_tab_link ${pathname === item.href ? 'active' : ''}`}>{item.name}</Link>
                     </div>
                 ))}
             </div>
