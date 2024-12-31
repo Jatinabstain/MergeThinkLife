@@ -21,6 +21,9 @@ export async function GET(request: Request) {
     // Get the tag contains categoryOf from the query string
     const fetchForCategory = url.searchParams.get("category");
 
+    // Get the search query from the query string
+    const SearchQuery = url.searchParams.get("SearchQuery");
+
     // New parameter to fetch categories
     const fetchCategories = url.searchParams.get("fetchCategories");
 
@@ -57,6 +60,19 @@ export async function GET(request: Request) {
         //     });
         //     // return response.results;
         // }
+        else if (SearchQuery) {
+            response = '';
+            // Fetch 'SearchQuery' pages from the Notion database
+            response = await notion.databases.query({
+                database_id: databaseId,
+                filter: {
+                    property: 'Name',
+                    title: {
+                        contains: SearchQuery
+                    }
+                }
+            });
+        }
         else {
             // Fetch all pages from the Notion database
             response = await notion.databases.query({
@@ -215,7 +231,7 @@ export async function GET(request: Request) {
                     category: category,
                     image_url: image_url,
                     article_url: article_url,
-                    // page: pageObject,
+                    page: pageObject,
                 };
             });
 

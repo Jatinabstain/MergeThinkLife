@@ -129,7 +129,7 @@ function SingleArticleFunction() {
 
 export default function Article() {
 
-    const { data: articles, loading: loadingArticles, error: errorArticles } = useNotionClient({ fetchFor: "Article1" });
+    const { data: articles, loading: loadingArticles, error: errorArticles } = useNotionClient({ fetchFor: "Popular" });
 
 
 

@@ -119,7 +119,7 @@ export default function Home() {
       <section className="search_form_bg">
         <div className="mx-auto max-w-[1200px] lg:px-8">
           <form action='' method="POST">
-            <div className="flex flex-wrap gap-y-5 items-center">
+            <div className="flex flex-wrap gap-y-5 items-start">
               <div className="form-group md:px-[19px] lg:basis-1/6 md:basis-1/3 w-full lg:ps-0">
                 <label htmlFor="fName" className="form-label md:left-[21px] left-5">First Name</label>
                 <input
@@ -129,7 +129,11 @@ export default function Home() {
                   placeholder="First Name"
                   required
                 />
-                <div className="text-red-600 text-sm mt-2">   {errors.fName ? errors.fName : '\u00A0'}</div>
+               {errors.fName && (
+                <div className="text-red-600 text-sm mt-2">
+                  {errors.fName}
+                </div>
+              )}
 
               </div>
               <div className="form-group md:px-[19px] lg:basis-1/6 md:basis-1/3 w-full">
@@ -141,7 +145,12 @@ export default function Home() {
                   placeholder="Last Name"
                   required
                 />
-                <div className="text-red-600 text-sm mt-2">   {errors.lName ? errors.lName : '\u00A0'}</div>
+                {errors.lName && (
+                <div className="text-red-600 text-sm mt-2">
+                  {errors.lName}
+                </div>
+              )}
+               
 
               </div>
               <div className="form-group md:px-[19px] lg:basis-1/6 md:basis-1/3 w-full">
@@ -154,7 +163,12 @@ export default function Home() {
                   required
                   pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
                 />
-                <div className="text-red-600 text-sm mt-2">   {errors.email ? errors.email : '\u00A0'}</div>
+                 {errors.email && (
+                <div className="text-red-600 text-sm mt-2">
+                  {errors.email}
+                </div>
+              )}
+               
 
               </div>
               <div className="form-group md:px-[19px] lg:basis-1/3 md:basis-8/12 w-full">
@@ -169,7 +183,13 @@ export default function Home() {
                   <option value="2">Short-Term Disability</option>
                   <option value="3">Term Life</option>
                 </select>
-                <div className="text-red-600 text-sm mt-2">   {errors.insuranceType ? errors.insuranceType : '\u00A0'}</div>
+
+                {errors.insuranceType && (
+                <div className="text-red-600 text-sm mt-2">
+                  {errors.insuranceType}
+                </div>
+              )}
+              
               </div>
               <div className="lg:basis-1/6 md:basis-1/3 w-full">
                 <div className="form-group md:px-[19px] lg:pe-0">

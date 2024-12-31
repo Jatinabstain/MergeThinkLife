@@ -14,17 +14,12 @@ import Loader from '../common/components/loader/loader';
 import { useSearchParams } from 'next/navigation';
 
 export default function Search() {
-
-   
     return (
         <>
             <Header />
                 <div className="mx-auto max-w-[1200px] px-8">
 
-                    {/* Search */}
-                    <Suspense fallback={<Loader />}>
-                        <SearchFunction />
-                    </Suspense>
+                    <SearchInput />
 
                     {/* Blog */}
                     <Suspense fallback={<Loader />}>
@@ -44,17 +39,33 @@ export default function Search() {
 // Article Function
 function ArticleFunction() {
     const searchParams = useSearchParams();
+
     const [categoryParam, setCategoryParam] = useState<string | null>(null);
-
     useEffect(() => {
-        // Get the 'category' query parameter value when the component mounts or the searchParams change
         const categoryParam = searchParams.get('category');
+        setCategoryParam(categoryParam); 
+    }, [searchParams]);
+    
+    const [queryParam, setQueryParam] = useState<string | null>(null);
+    useEffect(() => {
+        const queryParam = searchParams.get('s');
+        setQueryParam(queryParam); 
+    }, [searchParams]);
 
-        setCategoryParam(categoryParam); // Update state with the new 'category'
-    }, [searchParams]); // Dependency array ensures this effect runs when `searchParams` changes
+    let fetchFor = "";
+    let toFetch = "";
+    if(categoryParam){
+        fetchFor = "CategoryArticle";
+        toFetch = categoryParam;
+    }else{
+        fetchFor = "SearchQuery";
+        toFetch = queryParam || '';
+    }
 
-    //  to fetch from Notion APi
-    const { data: articlesByCategory, loading: loadingArticlesByCategory, error: errorArticlesByCategory } = useNotionClient({ fetchFor: "CategoryArticle", toFetch: categoryParam });
+    //  to fetch CategoryArticle from Notion APi
+    const { data: articlesByCategory, loading: loadingArticlesByCategory, error: errorArticlesByCategory } = useNotionClient({ fetchFor: fetchFor, toFetch: toFetch });
+
+  
 
     // Combine loading and error states
     const loading = loadingArticlesByCategory;
@@ -120,7 +131,7 @@ function BlogTabFunction() {
         // Get the 'category' query parameter value when the component mounts or the searchParams change
         const categoryParam = searchParams.get('category');
         setactive_cat(categoryParam); // Update state with the new 'category'
-    }, [searchParams]); // Dependency array ensures this effect runs when `searchParams` changes
+    }, [searchParams]);
 
     const { data: categoriesData, loading: loadingCategories, error: errorCategories } = useNotionClient({ fetchFor: "Categories" });
 
@@ -151,11 +162,5 @@ function BlogTabFunction() {
     );
 }
 
-function SearchFunction() {
-    const searchParam = useSearchParams().toString();
-    console.log(searchParam);
-    return (
-        <SearchInput  />
-    );
-}
+
 

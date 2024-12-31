@@ -47,10 +47,12 @@ const useNotionClient = ({ fetchFor, toFetch }: NotionClientProps) => {
                         break;
                     case "Popular":
                         url = `/api/notion?no_of_record=3`; // Fetch 3 articles
-                        // console.log(url);
+                        break;
+                    case "SearchQuery":
+                        url = `/api/notion?SearchQuery==${toFetch}`;
                         break;
                     case "SliderArticles":
-                        url = `/api/notion?no_of_record=2`; // Fetch 3 articles
+                        url = `/api/notion?no_of_record=2`; // Fetch 2 articles
                         break;
                     case "PaginatedArticles":
                         url = `/api/notion?no_of_record=0`; // Fetch all articles

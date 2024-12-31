@@ -7,7 +7,7 @@ import Loader from '../loader/loader';
 
 export default function ArticlesHome() {
     // Use the custom hook to fetch articles
-    const { data: articleData, loading, error } = useNotionClient({  fetchFor: "Article1"});
+    const { data: articleData, loading, error } = useNotionClient({  fetchFor: "Popular"});
 
     // Handle loading and error states
     if (loading) return <Loader />;
