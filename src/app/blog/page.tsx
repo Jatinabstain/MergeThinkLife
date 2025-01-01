@@ -59,7 +59,7 @@ export default function Blog() {
     const handlePageChange = (newPage: number) => setCurrentPage(newPage);
 
     // Handle loading and error states
-    if (isLoading) return <Loader />;
+    if (isLoading) return <><Header /><Loader /><Footer /></>;
     if (hasError) return <div><p>Error fetching articles: {hasError}</p></div>;
 
     return (
