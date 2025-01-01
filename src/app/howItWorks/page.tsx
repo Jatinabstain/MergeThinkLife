@@ -10,6 +10,7 @@ import claim from '../../../public/assets/claim.svg';
 import ArticleCard from '../common/components/articles/articleCard';
 import useNotionClient from '../common/components/NotionClient';
 import Loader from '../common/components/loader/loader';
+import Error from '../error500/page';
 
 
 export default function HowItWorks() {
@@ -19,14 +20,17 @@ export default function HowItWorks() {
     // Combine loading and error states
     const loading = isLoadingArticles;
     const error = articleError;
- 
+
     // Handle loading and error states
     if (loading) return <><Header /><Loader /><Footer /></>;
     if (error) {
+        console.log(error)
         return (
-            <div>
-                <p>Error fetching articles: {error}</p>
-            </div>
+            <>
+                <Header />
+                <Error />
+                <Footer />
+            </>
         );
     }
     return (

@@ -11,6 +11,7 @@ import useNotionClient from '../common/components/NotionClient';
 import Loader from '../common/components/loader/loader';
 import { useSearchParams } from 'next/navigation';
 import placeholder from '../../../public/assets/placeholder.jpg';
+import Error from '../error500/page';
 import { ArticleItem } from '@/types/articleCardTypes';
 
 function SingleArticleFunction() {
@@ -22,8 +23,6 @@ function SingleArticleFunction() {
         const atrPrmFromUrl = searchParams.get('atr_prm');
         setAtrPrm(atrPrmFromUrl); // Update state with the new 'atr_prm'
     }, [searchParams]); // Dependency array ensures this effect runs when `searchParams` changes
-
-    console.log(atrPrm);
 
     const { data, loading: loadingSingleArticle, error: errorSingleArticle } = useNotionClient({ fetchFor: "SingleArticle", toFetch: atrPrm });
 
@@ -43,10 +42,9 @@ function SingleArticleFunction() {
     // Handle loading and error states
     if (loading) return <><Loader /></>;
     if (error) {
+        console.log(error)
         return (
-            <div>
-                <p>Error fetching articles: {error}</p>
-            </div>
+            <Error />
         );
     }
     return (
@@ -129,13 +127,14 @@ function SingleArticleFunction() {
 
 export default function Article() {
 
-    const { data: articles, loading: loadingArticles, error: errorArticles } = useNotionClient({ fetchFor: "Popular" });
+    // const { data: articles, loading: loadingArticles, error: errorArticles } = useNotionClient({ fetchFor: "Popular" });
+    const { data: articles } = useNotionClient({ fetchFor: "Popular" });
 
 
 
-    const loading = loadingArticles;
-    const error = errorArticles;
-    console.log(error, loading);
+    // const loading = loadingArticles;
+    // const error = errorArticles;
+    // console.log(error, loading);
 
     // Handle loading and error states
     // if (loading) return <><Loader /></>;

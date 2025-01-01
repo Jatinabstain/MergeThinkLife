@@ -1,19 +1,10 @@
 import Image from 'next/image'
-import Header from '../common/header';
-import Footer from '../common/footer';
 import errorImg from '../../../public/assets/500.png';
 import Link from 'next/link';
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-    title: '500 - Think Life',
-    description: '500',
-}
 
 export default function error500() {
     return (
         <>
-            <Header />
             <div className="mx-auto max-w-[1200px] px-8">
                 <div className="min-h-screen bubble_bg flex flex-wrap flex-col justify-center">
                     <div className="comming_soon">
@@ -26,7 +17,6 @@ export default function error500() {
                     </div>
                 </div>
             </div>
-            <Footer />
         </>
     );
 }

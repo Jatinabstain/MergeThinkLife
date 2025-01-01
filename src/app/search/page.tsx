@@ -13,6 +13,7 @@ import { ArticleItem } from '@/types/articleCardTypes';
 import Loader from '../common/components/loader/loader';
 import { useSearchParams } from 'next/navigation';
 import NoResultsFound from '../common/components/noResultsFound/noResultsFound';
+import Error from '../error500/page';
 
 export default function Search() {
     return (
@@ -109,22 +110,24 @@ function ArticleFunction() {
     }
     return (
         <>
-            {/* <div>
-                <p>Article Function : {searchParams}</p>
-            </div> */}
-            {currentArticles.length > 0 &&  currentArticles ? (
-                <section className='mb-16'>
-                    <div className="article_heading flex gap-[10.67px] items-center mb-4">
-                        <h3>Articles</h3>
-                    </div>
-                    <ArticleCard articles={currentArticles} />
+            {currentArticles.length > 0 && currentArticles ? (
+                <>
+                    <section className='mb-16'>
+                        <div className="article_heading flex gap-[10.67px] items-center mb-4">
+                            <h3>Articles</h3>
+                        </div>
+                        <ArticleCard articles={currentArticles} />
+
+                    </section>
                     <Pagination
                         currentPage={currentPage}
                         totalPages={totalPages}
                         onPageChange={handlePageChange}
                     />
-                </section>
-            ) : (<NoResultsFound />)}
+                </>
+            ) : (
+                <NoResultsFound />
+            )}
         </>
     );
 }
@@ -155,11 +158,11 @@ function BlogTabFunction() {
 
     // Handle loading and error states
     if (loading) return <><Loader /></>;
+
     if (error) {
+        console.log(error)
         return (
-            <div>
-                <p>Error fetching articles: {error}</p>
-            </div>
+            <Error />
         );
     }
     return (

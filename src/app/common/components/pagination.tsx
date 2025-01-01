@@ -30,13 +30,17 @@ export default function pagination({ currentPage, totalPages, onPageChange }: Pa
             <div className="flex justify-center items-center mb-32">
                 <div className="pagination">
                     <ul className="flex items-center">
-                        {currentPage > 1 && (
-                            <li className="pagination-item">
+                        <li className="pagination-item">
+                            {currentPage > 1 ? (
                                 <button onClick={() => onPageChange(currentPage - 1)} className="arrow_btn pagination-link">
                                     <Image src={ArrowLeft} alt="Previous" className="left_arrow" />
                                 </button>
-                            </li>
-                        )}
+                            ) : (
+                                <button className="arrow_btn pagination-link">
+                                    <Image src={ArrowLeft} alt="Previous" className="left_arrow" />
+                                </button>
+                            )}
+                        </li>
                         {pageNumbers.map((page, index) => (
                             <li key={index} className="pagination-item">
                                 {typeof page === 'number' ? (
@@ -48,13 +52,17 @@ export default function pagination({ currentPage, totalPages, onPageChange }: Pa
                                 )}
                             </li>
                         ))}
-                        {currentPage < totalPages && (
-                            <li className="pagination-item">
+                        <li className="pagination-item">
+                            {currentPage < totalPages ? (
                                 <button onClick={() => onPageChange(currentPage + 1)} className="arrow_btn pagination-link">
                                     <Image src={ArrowRight} alt="Next" className="left_arrow" />
                                 </button>
-                            </li>
-                        )}
+                            ) : (
+                                <button className="arrow_btn pagination-link">
+                                    <Image src={ArrowRight} alt="Next" className="left_arrow" />
+                                </button>
+                            )}
+                        </li>
                     </ul>
                 </div>
             </div>
