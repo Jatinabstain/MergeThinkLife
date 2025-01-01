@@ -2,9 +2,9 @@ import { Client } from "@notionhq/client";
 import { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints"; // Import the correct types
 
 // Initialize Notion client
-// const notion = new Client({ auth: process.env.NOTION_API_KEY }); // Ensure you have your API key in environment variables
+const notion = new Client({ auth: process.env.NEXT_PUBLIC_NOTION_API_KEY }); // Ensure you have your API key in environment variables
 
-const notion = new Client({ auth: "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" });
+// const notion = new Client({ auth: "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" });
 
 // Function to format date from YYYY-MM-DD to DD MMM YYYY
 const formatDate = (dateString: string): string => {
@@ -34,8 +34,10 @@ export async function GET(request: Request) {
     const fetch_art = url.searchParams.get("fetch_art");
     try {
         // const databaseId = "YOUR_DATABASE_ID"; // Replace with your actual database ID
-        const databaseId = "15bb24f4-b447-807d-8e7c-e1f8aa6ce4e0";
-
+        const databaseId = process.env.NEXT_PUBLIC_NOTION_DATABASE_ID;
+        if (!databaseId) {
+            throw new Error("Database ID is not defined in environment variables");
+        }
 
         let response;
         // If ID is provided, fetch the specific article
