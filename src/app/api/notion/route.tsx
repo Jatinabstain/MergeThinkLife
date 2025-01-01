@@ -60,7 +60,7 @@ export async function GET(request: Request) {
                 page_size: no_of_record,
                 filter: {
                     property: "Status",
-                    select: {
+                    status: {
                         equals: "Published"
                     }
                 }
