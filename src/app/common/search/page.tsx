@@ -39,6 +39,7 @@ function Input() {
             <input
                 type="text"
                 className="form-input max-w-xl w-full"
+                // placeholder="Article Label"
                 placeholder="Search"
                 value={searchQuery}
                 onChange={handleInputChange} // Capture input value

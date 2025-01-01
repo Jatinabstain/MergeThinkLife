@@ -1,3 +1,4 @@
+"use client"; // This line makes it a client component`1234  
 import Header from '../common/header';
 import Footer from '../common/footer';
 import Image from 'next/image';
@@ -6,30 +7,28 @@ import apply from '../../../public/assets/apply.svg';
 import policy from '../../../public/assets/policy.svg';
 import managePolicy from '../../../public/assets/managePolicy.svg';
 import claim from '../../../public/assets/claim.svg';
-import type { Metadata } from 'next';
 import ArticleCard from '../common/components/articles/articleCard';
-import { ArticleItem } from "@/types/articleCardTypes";
-import articleImg from '../../../public/assets/card-1.jpg';
-
-// const articles: ArticleItem[] = [
-//     { id: '1', title: "Nike Sneakers", date: "4 Feb 2024", content: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint.  Amet minim mollit non deserunt", time: "5 Minute Read",  href: "article", image: articleImg },
-//     { id: '2', title: "Nike Sneakers", date: "4 Feb 2024", content: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint.  Amet minim mollit non deserunt", time: "5 Minute Read",  href: "article", image: articleImg },
-//     { id: '3', title: "Nike Sneakers", date: "4 Feb 2024", content: "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint.  Amet minim mollit non deserunt", time: "5 Minute Read",  href: "article", image: articleImg }
-// ]
+import useNotionClient from '../common/components/NotionClient';
+import Loader from '../common/components/loader/loader';
 
 
+export default function HowItWorks() {
 
-const articles: ArticleItem[] = [
-    { id: '1', title: "Nike Sneakers", released_date: "4 Feb 2024",  category: "5 Minute Read", article_url: "article", image_url: articleImg.src },
-    { id: '2', title: "Nike Sneakers", released_date: "4 Feb 2024",  category: "5 Minute Read", article_url: "article", image_url: articleImg.src },
-    { id: '3', title: "Nike Sneakers", released_date: "4 Feb 2024",  category: "5 Minute Read", article_url: "article", image_url: articleImg.src }
-]
-export const metadata: Metadata = {
-    title: 'How It Works - Think Life',
-    description: 'How It Works',
-}
+    const { data: articleList, loading: isLoadingArticles, error: articleError } = useNotionClient({ fetchFor: "Popular" });
 
-export default function aboutUs() {
+    // Combine loading and error states
+    const loading = isLoadingArticles;
+    const error = articleError;
+ 
+    // Handle loading and error states
+    if (loading) return <><Header /><Loader /><Footer /></>;
+    if (error) {
+        return (
+            <div>
+                <p>Error fetching articles: {error}</p>
+            </div>
+        );
+    }
     return (
         <>
             <Header />
@@ -89,8 +88,8 @@ export default function aboutUs() {
                                 </div>
                                 <div className="how_content">
                                     <h3>Manage Your Policy</h3>
-                                    <p>Our online portal allows you to easily manage your policy and make any necessary changes. From increasing coverage to updating beneficiaries, you have complete control over your life insurance policy 
-                                    at any time.</p>
+                                    <p>Our online portal allows you to easily manage your policy and make any necessary changes. From increasing coverage to updating beneficiaries, you have complete control over your life insurance policy
+                                        at any time.</p>
                                 </div>
                             </div>
                         </div>
@@ -111,7 +110,7 @@ export default function aboutUs() {
                     <div className="heading mb-8">
                         <h3>Blog</h3>
                     </div>
-                    <ArticleCard articles={articles} />
+                    <ArticleCard articles={articleList} />
                 </section>
             </div>
             <Footer />

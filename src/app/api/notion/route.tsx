@@ -40,6 +40,7 @@ export async function GET(request: Request) {
         let response;
         // If ID is provided, fetch the specific article
         if (fetchForCategory) {
+            response = '';
             // Fetch all pages from the Notion database
             response = await notion.databases.query({
                 database_id: databaseId,
@@ -51,15 +52,21 @@ export async function GET(request: Request) {
                 }
             });
         }
-        // else if (no_of_record) {
-        //     response = '';
-        //     // Fetch 'no_of_record' pages from the Notion database
-        //     response = await notion.databases.query({
-        //         database_id: databaseId,
-        //         page_size: no_of_record // 2
-        //     });
-        //     // return response.results;
-        // }
+        else if (no_of_record) {
+            response = '';
+            // Fetch 'no_of_record' pages from the Notion database
+            response = await notion.databases.query({
+                database_id: databaseId,
+                page_size: no_of_record,
+                filter: {
+                    property: "Status",
+                    select: {
+                        equals: "Published"
+                    }
+                }
+            });
+        }
+
         else if (SearchQuery) {
             response = '';
             // Fetch 'SearchQuery' pages from the Notion database
@@ -74,6 +81,7 @@ export async function GET(request: Request) {
             });
         }
         else {
+            response = '';
             // Fetch all pages from the Notion database
             response = await notion.databases.query({
                 database_id: databaseId,
@@ -231,14 +239,15 @@ export async function GET(request: Request) {
                     category: category,
                     image_url: image_url,
                     article_url: article_url,
-                    page: pageObject,
+                    // page: pageObject,
+                    // no_of_record:no_of_record
                 };
             });
 
         // If no_of_record is provided, slice the results
-        if (no_of_record) {
-            return new Response(JSON.stringify(articles.slice(0, no_of_record)), { status: 200 });
-        }
+        // if (no_of_record) {
+        //     return new Response(JSON.stringify(articles.slice(0, no_of_record)), { status: 200 });
+        // }
 
 
         return new Response(JSON.stringify(articles), { status: 200 }); // Return articles as JSON response

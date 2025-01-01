@@ -49,7 +49,7 @@ const useNotionClient = ({ fetchFor, toFetch }: NotionClientProps) => {
                         url = `/api/notion?no_of_record=3`; // Fetch 3 articles
                         break;
                     case "SearchQuery":
-                        url = `/api/notion?SearchQuery==${toFetch}`;
+                        url = `/api/notion?SearchQuery=${toFetch}`; // Released Article 2
                         break;
                     case "SliderArticles":
                         url = `/api/notion?no_of_record=2`; // Fetch 2 articles

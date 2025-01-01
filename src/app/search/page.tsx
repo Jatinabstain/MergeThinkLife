@@ -57,15 +57,15 @@ function ArticleFunction() {
     if(categoryParam){
         fetchFor = "CategoryArticle";
         toFetch = categoryParam;
-    }else{
+    }
+    if(queryParam){
         fetchFor = "SearchQuery";
-        toFetch = queryParam || '';
+        toFetch = queryParam;
     }
 
     //  to fetch CategoryArticle from Notion APi
     const { data: articlesByCategory, loading: loadingArticlesByCategory, error: errorArticlesByCategory } = useNotionClient({ fetchFor: fetchFor, toFetch: toFetch });
-
-  
+    console.log(toFetch,fetchFor)
 
     // Combine loading and error states
     const loading = loadingArticlesByCategory;
@@ -161,6 +161,3 @@ function BlogTabFunction() {
         </>
     );
 }
-
-
-
