@@ -1,4 +1,4 @@
-"use client"; // This line makes it a client component
+"use client";
 import React, { useState, useEffect, Suspense } from 'react';
 
 import Header from '../common/header';
@@ -41,65 +41,46 @@ export default function Search() {
 // Article Function
 function ArticleFunction() {
     const searchParams = useSearchParams();
-
     const [categoryParam, setCategoryParam] = useState<string | null>(null);
+    const [queryParam, setQueryParam] = useState<string | null>(null);
+ 
     useEffect(() => {
         const categoryParam = searchParams.get('category');
-        setCategoryParam(categoryParam);
-    }, [searchParams]);
-
-    const [queryParam, setQueryParam] = useState<string | null>(null);
-    useEffect(() => {
         const queryParam = searchParams.get('s');
+        setCategoryParam(categoryParam);
         setQueryParam(queryParam);
     }, [searchParams]);
 
-    let fetchFor = "";
-    let toFetch = "";
-    if (categoryParam) {
-        fetchFor = "CategoryArticle";
-        toFetch = categoryParam;
-    }
-    if (queryParam) {
-        fetchFor = "SearchQuery";
-        toFetch = queryParam;
-    }
+    const fetchFor = categoryParam ? "CategoryArticle" : "SearchQuery";
+    const toFetch = categoryParam || queryParam;
 
-    //  to fetch CategoryArticle from Notion APi
-    const { data: articlesByCategory, loading: loadingArticlesByCategory, error: errorArticlesByCategory } = useNotionClient({ fetchFor: fetchFor, toFetch: toFetch });
-    console.log(toFetch, fetchFor)
+    const { data: fetchedArticles, loading: loadingfetchedArticles, error: errorfetchedArticles } = useNotionClient({ fetchFor: fetchFor, toFetch: toFetch });
 
-    // Combine loading and error states
-    const loading = loadingArticlesByCategory;
-    const error = errorArticlesByCategory;
+    const loading   =   loadingfetchedArticles;
+    const error     =   errorfetchedArticles;
 
-    const [currentPage, setCurrentPage] = useState(1); // Manage currentPage using state
-    const [currentArticles, setCurrentArticles] = useState<ArticleItem[]>([]);
+    const [currentPage, setCurrentPage]         =   useState(1);
+    const [currentArticles, setCurrentArticles] =   useState<ArticleItem[]>([]);
 
-    // Assuming articles is an array and you have a total count
-    const totalArticles = articlesByCategory.length; // Replace with actual total count from your API
-
-    const articlesPerPage = 3; // Define how many articles per page
-
-    const totalPages = Math.ceil(totalArticles / articlesPerPage); // Calculate total pages
+    const totalArticles     =   fetchedArticles.length || 0;
+    const articlesPerPage   =   3;
+    const totalPages        =   Math.ceil(totalArticles / articlesPerPage);
 
     useEffect(() => {
-        if (articlesByCategory) {
-            const startIndex = (currentPage - 1) * articlesPerPage;
-            const endIndex = startIndex + articlesPerPage;
-            setCurrentArticles(articlesByCategory.slice(startIndex, endIndex));
+        if (fetchedArticles) {
+            const startIndex    =   (currentPage - 1) * articlesPerPage;
+            const endIndex      =   startIndex + articlesPerPage;
+            setCurrentArticles(fetchedArticles.slice(startIndex, endIndex));
         }
-    }, [articlesByCategory, currentPage]);
+    }, [fetchedArticles, currentPage]);
 
-    const handlePageChange = (newPage: number) => {
-        setCurrentPage(newPage); // Update currentPage state
-        const startIndex = (newPage - 1) * articlesPerPage;
-        const endIndex = startIndex + articlesPerPage;
-        setCurrentArticles(articlesByCategory.slice(startIndex, endIndex));
+    const handlePageChange  =   (newPage: number) => {
+        setCurrentPage(newPage);
+        const startIndex    =   (newPage - 1) * articlesPerPage;
+        const endIndex      =   startIndex + articlesPerPage;
+        setCurrentArticles(fetchedArticles.slice(startIndex, endIndex));
     };
 
-    console.log(error, loading, articlesByCategory);
-    // Handle loading and error states
     if (loading) return <><Loader /></>;
     if (error) {
         return (
@@ -117,7 +98,6 @@ function ArticleFunction() {
                             <h3>Articles</h3>
                         </div>
                         <ArticleCard articles={currentArticles} />
-
                     </section>
                     <Pagination
                         currentPage={currentPage}
@@ -135,30 +115,26 @@ function ArticleFunction() {
 // Blog Tab Function
 function BlogTabFunction() {
     const searchParams = useSearchParams();
-    const [active_cat, setactive_cat] = useState<string | null>('all');
+    const [active_cat, setActiveCat] = useState<string | null>('all');
 
     useEffect(() => {
-        // Get the 'category' query parameter value when the component mounts or the searchParams change
         const categoryParam = searchParams.get('category');
-        setactive_cat(categoryParam); // Update state with the new 'category'
+        setActiveCat(categoryParam);
     }, [searchParams]);
 
     const { data: categoriesData, loading: loadingCategories, error: errorCategories } = useNotionClient({ fetchFor: "Categories" });
 
     // Transform categoriesData to match CategoryItem structure
     const categories: CategoryItem[] = Array.isArray(categoriesData) ? categoriesData.map((category) => ({
-        id: parseInt(category.id), // Ensure id is a number
-        name: category.name || "Unnamed Category", // Ensure title is available
-        href: category.href // Create href based on title
+        id: parseInt(category.id),
+        name: category.name || "Unnamed Category",
+        href: category.href
     })) : [];
 
-    // Combine loading and error states
     const loading = loadingCategories;
     const error = errorCategories;
 
-    // Handle loading and error states
     if (loading) return <><Loader /></>;
-
     if (error) {
         console.log(error)
         return (

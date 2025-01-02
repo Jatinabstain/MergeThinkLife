@@ -1,18 +1,13 @@
-"use client"; // This line makes it a client component
-// import React, { useState } from 'react';
+"use client";
 import React, { useState, useEffect, Suspense } from 'react';
 
 import Link from 'next/link';
 import SearchIcon from '../../../../public/assets/search.svg';
 import Image from 'next/image';
-import { useSearchParams } from 'next/navigation';
 import Loader from '../components/loader/loader';
-
-
+import { useSearchParams } from 'next/navigation';
 
 export default function SearchBar() {
-
-
     return (
         <Suspense fallback={<Loader />}>
             <Input />
@@ -20,18 +15,20 @@ export default function SearchBar() {
     );
 }
 
-
 function Input() {
-    const searchParams = useSearchParams();
+    const searchParams      =   useSearchParams();
     const [searchQuery, setSearchQuery] = useState('');
+    const [href, setHref]   =   useState('blog');
 
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchQuery(event.target.value); // Update search query as the user types
+    const handleInputChange =   (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchQuery(event.target.value);
+        setHref(`/search?s=${encodeURIComponent(event.target.value)}`); 
     };
 
     useEffect(() => {
-        const categoryParam = searchParams.get('s');
-        setSearchQuery(categoryParam || '');
+        const categoryParam =   searchParams.get('s') || '';
+        setSearchQuery(categoryParam);
+        setHref(categoryParam); 
     }, [searchParams]);
 
     return (
@@ -39,12 +36,11 @@ function Input() {
             <input
                 type="text"
                 className="form-input max-w-xl w-full"
-                // placeholder="Article Label"
                 placeholder="Search"
                 value={searchQuery}
-                onChange={handleInputChange} // Capture input value
+                onChange={handleInputChange}
             />
-            <Link href={`/search?s=${encodeURIComponent(searchQuery)}`} className="primary_fill_icon">
+            <Link href={href} className="primary_fill_icon">
                 <Image src={SearchIcon} alt="search" className="input_icon" />
             </Link>
         </div>
