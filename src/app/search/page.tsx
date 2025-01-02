@@ -106,7 +106,7 @@ function ArticleFunction() {
                     />
                 </>
             ) : (
-                <NoResultsFound />
+                <NoResultsFound  message={null} />
             )}
         </>
     );
@@ -131,8 +131,8 @@ function BlogTabFunction() {
         href: category.href
     })) : [];
 
-    const loading = loadingCategories;
-    const error = errorCategories;
+    const loading   =   loadingCategories;
+    const error     =   errorCategories;
 
     if (loading) return <><Loader /></>;
     if (error) {

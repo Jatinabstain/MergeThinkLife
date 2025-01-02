@@ -2,7 +2,12 @@ import Image from 'next/image'
 // import noResults from '../../../../public/assets/no-results.svg';
 import noResults from '../../../../../public/assets/no-results.svg';
 
-export default function noResultsFound() {
+
+type noResultsProps = {
+    message: string | null; // Active Category String can be an string or null
+};
+
+export default function noResultsFound({ message}: noResultsProps) {
     return (
         <>
             <div className="mx-auto max-w-[1200px] px-8">
@@ -11,11 +16,10 @@ export default function noResultsFound() {
                         <Image src={noResults} alt='No Result Found IMG' className='mx-auto mb-7' />
                         <div className="error_content">
                             <h3 className='mb-4'>No results found</h3>
-                            <p>We couldn&apos;t find what you searched for. Try searching again.</p>
+                            <p>{message ?? "We couldn&apos;t find what you searched for. Try searching again."}</p>
                         </div>
                     </div>
                 </div>
-
             </div>
         </>
     );

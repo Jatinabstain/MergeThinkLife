@@ -1,4 +1,4 @@
-"use client"; // This line makes it a client component
+"use client";
 import React, { useState, useEffect } from 'react';
 
 import Header from '../common/header';
@@ -59,7 +59,6 @@ export default function Blog() {
 
     // Handle loading and error states
     if (isLoading) return <><Header /><Loader /><Footer /></>;
-    // if (hasError) return <div><p>Error fetching articles: {hasError}</p></div>;
 
     if (hasError) {
         console.log(hasError)

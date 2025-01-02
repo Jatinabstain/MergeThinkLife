@@ -22,14 +22,14 @@ export default function ArticlesHome() {
                     <h3>Our Recent Articles</h3>
                 </div>
 
-                {(!articleData || articleData.length === 0) ? (<NoResultsFound />) :
-                    (
-                        <>
-                            <ArticleCard articles={articleData} />
-
-                            <Link href="blog" className="primary_fill_outline mt-8 mx-auto">All Articles</Link>
-                        </>
-                    )}
+                {(!articleData || articleData.length === 0) ? (
+                    <NoResultsFound message="Sorry, no results were found. Please try again later." />
+                ) : (
+                    <>
+                        <ArticleCard articles={articleData} />
+                        <Link href="blog" className="primary_fill_outline mt-8 mx-auto">All Articles</Link>
+                    </>
+                )}
             </div>
         </section>
     );
