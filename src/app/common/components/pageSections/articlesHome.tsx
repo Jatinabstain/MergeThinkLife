@@ -4,14 +4,16 @@ import Link from 'next/link';
 import useNotionClient from '../NotionClient'; // Adjust the path as necessary
 import ArticleCard from '../articles/articleCard';
 import Loader from '../loader/loader';
+import NoResultsFound from '../noResultsFound/noResultsFound';
 
 export default function ArticlesHome() {
     // Use the custom hook to fetch articles
-    const { data: articleData, loading, error } = useNotionClient({  fetchFor: "Popular"});
+    const { data: articleData, loading, error } = useNotionClient({ fetchFor: "Popular" });
 
     // Handle loading and error states
     if (loading) return <Loader />;
-    if (error) return <p>Error: {error}</p>;
+    // if (error) return <p>Error: {error}</p>;
+    if (error) console.log('Error', { error });
 
     return (
         <section className="page_section pb-[128px]">
@@ -19,9 +21,15 @@ export default function ArticlesHome() {
                 <div className="heading mb-8">
                     <h3>Our Recent Articles</h3>
                 </div>
-                <ArticleCard articles={articleData} />
 
-                <Link href="blog" className="primary_fill_outline mt-8 mx-auto">All Articles</Link>
+                {(!articleData || articleData.length === 0) ? (<NoResultsFound />) :
+                    (
+                        <>
+                            <ArticleCard articles={articleData} />
+
+                            <Link href="blog" className="primary_fill_outline mt-8 mx-auto">All Articles</Link>
+                        </>
+                    )}
             </div>
         </section>
     );

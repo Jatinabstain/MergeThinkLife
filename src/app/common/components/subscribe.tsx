@@ -79,7 +79,7 @@ export default function Subscribe() {
             }
 
             const data = await response.json();
-            console.log('Put ',process.env.NEXT_PUBLIC_SENDGRID_API_KEY);
+           
             console.log('Contact added/updated successfully:', data);
 
             setModalTitle('Thank you for showing interest.');
@@ -110,8 +110,6 @@ export default function Subscribe() {
             });
 
             const data = await response.json();
-            console.log('Get ',process.env.NEXT_PUBLIC_SENDGRID_API_KEY);
-            console.log('List data:', data);
 
             const list = data.result.find((list: { name: string; id: string }) => list.name === listName);
             // const list = data.result.find((list: any) => list.name === listName);
