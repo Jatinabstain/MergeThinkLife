@@ -19,10 +19,9 @@ function SingleArticleFunction() {
     const [atrPrm, setAtrPrm] = useState<string | null>(null);
 
     useEffect(() => {
-        // Get the 'atr_prm' query parameter value when the component mounts or the searchParams change
         const atrPrmFromUrl = searchParams.get('atr_prm');
-        setAtrPrm(atrPrmFromUrl); // Update state with the new 'atr_prm'
-    }, [searchParams]); // Dependency array ensures this effect runs when `searchParams` changes
+        setAtrPrm(atrPrmFromUrl);
+    }, [searchParams]);
 
     const { data, loading: loadingSingleArticle, error: errorSingleArticle } = useNotionClient({ fetchFor: "SingleArticle", toFetch: atrPrm });
 
@@ -34,11 +33,9 @@ function SingleArticleFunction() {
         setSidebarVisible(!isSidebarVisible); // Toggle the visibility
     };
 
-
     const loading = loadingSingleArticle;
     const error = errorSingleArticle;
 
-    console.log(error, loading);
     // Handle loading and error states
     if (loading) return <><Loader /></>;
     if (error) {
@@ -126,26 +123,7 @@ function SingleArticleFunction() {
 }
 
 export default function Article() {
-
-    // const { data: articles, loading: loadingArticles, error: errorArticles } = useNotionClient({ fetchFor: "Popular" });
     const { data: articles } = useNotionClient({ fetchFor: "Popular" });
-
-
-
-    // const loading = loadingArticles;
-    // const error = errorArticles;
-    // console.log(error, loading);
-
-    // Handle loading and error states
-    // if (loading) return <><Loader /></>;
-    // if (error) {
-    //     return (
-    //         <div>
-    //             <p>Error fetching articles: {error}</p>
-    //         </div>
-    //     );
-    // }
-
     return (
         <>
             <Header />
@@ -154,7 +132,6 @@ export default function Article() {
                     <SingleArticleFunction />
                 </Suspense>
 
-
                 <section className='mb-32'>
                     <div className="article_heading flex gap-[10.67px] items-center mb-4">
                         <h3>Our Recent Articles</h3>
@@ -162,8 +139,6 @@ export default function Article() {
                     <ArticleCard articles={articles} />
                 </section>
             </div>
-
-
             <Footer />
         </>
     );

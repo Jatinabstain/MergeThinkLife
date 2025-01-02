@@ -5,8 +5,8 @@ import Link from "next/link";
 import { CategoryItem } from '@/types/categoryTypes';
 
 type CategoriesProps = {
-    category: CategoryItem[] | null; // Category can be an array or null
-    active_cat: string | null; // Active Category String can be an string or null
+    category: CategoryItem[] | null;
+    active_cat: string | null;
 };
 
 export default function BlogTabs({ category , active_cat}: CategoriesProps) {

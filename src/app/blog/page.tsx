@@ -41,16 +41,16 @@ export default function Blog() {
 
     // Pagination
     const [currentPage, setCurrentPage] = useState(1);
-    const articlesPerPage = 3;
-    const totalArticles = paginatedArticles.length;
-    const totalPages = Math.ceil(totalArticles / articlesPerPage);
+    const articlesPerPage   =   3;
+    const totalArticles     =   paginatedArticles.length;
+    const totalPages        =   Math.ceil(totalArticles / articlesPerPage);
 
-    const [currentArticles, setCurrentArticles] = useState<ArticleItem[]>([]);
+    const [currentArticles, setCurrentArticles]     =   useState<ArticleItem[]>([]);
 
     useEffect(() => {
         if (paginatedArticles) {
-            const startIndex = (currentPage - 1) * articlesPerPage;
-            const endIndex = startIndex + articlesPerPage;
+            const startIndex    =   (currentPage - 1) * articlesPerPage;
+            const endIndex      =   startIndex + articlesPerPage;
             setCurrentArticles(paginatedArticles.slice(startIndex, endIndex));
         }
     }, [paginatedArticles, currentPage]);
@@ -58,7 +58,7 @@ export default function Blog() {
     const handlePageChange = (newPage: number) => setCurrentPage(newPage);
 
     // Handle loading and error states
-    if (isLoading) return <><Header /><Loader /><Footer /></>;
+    if (isLoading) return <><Loader /></>;
 
     if (hasError) {
         console.log(hasError)

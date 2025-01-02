@@ -18,7 +18,7 @@ import Link from "next/link";
 const menus = [
     { name: 'Home', href: '/' },
     { name: 'Products', href: '/products' },
-    { name: 'Blog', href: '/products' },
+    { name: 'Blog', href: '/blog' },
     { name: 'About Us', href: '/about-us' },
     { name: 'How It Works', href: '/how-it-works' },
     { name: 'Privacy Policy', href: '/privacy-policy' },

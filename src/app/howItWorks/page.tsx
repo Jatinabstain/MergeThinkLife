@@ -18,11 +18,11 @@ export default function HowItWorks() {
     const { data: articleList, loading: isLoadingArticles, error: articleError } = useNotionClient({ fetchFor: "Popular" });
 
     // Combine loading and error states
-    const loading = isLoadingArticles;
-    const error = articleError;
+    const loading   =   isLoadingArticles;
+    const error     =   articleError;
 
     // Handle loading and error states
-    if (loading) return <><Header /><Loader /><Footer /></>;
+    if (loading) return <><Loader /></>;
     if (error) {
         console.log(error)
         return (
