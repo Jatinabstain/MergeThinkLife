@@ -28,7 +28,7 @@ function Input() {
     useEffect(() => {
         const categoryParam =   searchParams.get('s') || '';
         setSearchQuery(categoryParam);
-        setHref(categoryParam); 
+        setHref(`/search?s=${categoryParam}`);
     }, [searchParams]);
 
     return (
