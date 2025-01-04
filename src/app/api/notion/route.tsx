@@ -1,6 +1,11 @@
 import { Client } from "@notionhq/client";
 import { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints"; // Import the correct types
 
+import fs from 'fs';
+import path from 'path';
+
+const imagesFolder = path.join(process.cwd(), 'public', 'images');
+
 // Initialize Notion client
 const notion = new Client({ auth: process.env.NEXT_PUBLIC_NOTION_API_KEY }); // Ensure you have your API key in environment variables
 
@@ -12,8 +17,6 @@ const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-GB', options).replace(',', ''); // Remove comma for formatting
 }
-
-
 
 export async function GET(request: Request) {
     const url = new URL(request.url);
@@ -40,6 +43,13 @@ export async function GET(request: Request) {
         }
 
         let response;
+        // If fetch_art is provided, fetch the specific article by ID
+        if (fetch_art) {
+            const articleResponse = await fetchArticleById(fetch_art);
+            return new Response(JSON.stringify(articleResponse), { status: 200 });
+        }
+
+
         // If ID is provided, fetch the specific article
         if (fetchForCategory) {
             response = '';
@@ -93,57 +103,57 @@ export async function GET(request: Request) {
 
 
         // Handle fetching a specific article by ID : SingleArticle
-        if (fetch_art) {
-            const articles = response.results as PageObjectResponse[]; // Cast to PageObjectResponse array
+        // if (fetch_art) {
+        //     const articles = response.results as PageObjectResponse[]; // Cast to PageObjectResponse array
 
-            // Filter the articles to find the one with the matching ID
-            const SingleArticle = articles.find(page => page.id === fetch_art);
+        //     // Filter the articles to find the one with the matching ID
+        //     const SingleArticle = articles.find(page => page.id === fetch_art);
 
-            if (SingleArticle) {
-                const properties = SingleArticle.properties;
+        //     if (SingleArticle) {
+        //         const properties = SingleArticle.properties;
 
-                // Extract article details
-                let title = "Untitled";
-                let released_date: string | null = null;
-                let category: string[] = [];
-                let image_url: string | null = null;
+        //         // Extract article details
+        //         let title = "Untitled";
+        //         let released_date: string | null = null;
+        //         let category: string[] = [];
+        //         let image_url: string | null = null;
 
-                // Fetch Title Name
-                if (properties.Name && properties.Name.type === 'title' && properties.Name.title.length > 0) {
-                    const richTextItem = properties.Name.title[0]; // Get the first rich text item
-                    if ('text' in richTextItem) { // Check if it has a 'text' property
-                        title = richTextItem.text.content; // Access the text content
-                    }
-                }
+        //         // Fetch Title Name
+        //         if (properties.Name && properties.Name.type === 'title' && properties.Name.title.length > 0) {
+        //             const richTextItem = properties.Name.title[0]; // Get the first rich text item
+        //             if ('text' in richTextItem) { // Check if it has a 'text' property
+        //                 title = richTextItem.text.content; // Access the text content
+        //             }
+        //         }
 
-                // Fetch Released Date
-                if (properties.Date && properties.Date.type === 'date' && properties.Date.date) {
-                    released_date = formatDate(properties.Date.date.start); // Format the date
-                }
+        //         // Fetch Released Date
+        //         if (properties.Date && properties.Date.type === 'date' && properties.Date.date) {
+        //             released_date = formatDate(properties.Date.date.start); // Format the date
+        //         }
 
-                // Fetch Categories
-                if (properties.Tags && properties.Tags.type === 'multi_select') {
-                    category = properties.Tags.multi_select.map(tag => tag.name); // Get the names of the tags
-                }
+        //         // Fetch Categories
+        //         if (properties.Tags && properties.Tags.type === 'multi_select') {
+        //             category = properties.Tags.multi_select.map(tag => tag.name); // Get the names of the tags
+        //         }
 
 
-                // Fetch Image URL
-                if (SingleArticle.cover && SingleArticle.cover.type === 'file' && SingleArticle.cover.file) {
-                    image_url = SingleArticle.cover.file.url; // Get the image URL
-                }
+        //         // Fetch Image URL
+        //         if (SingleArticle.cover && SingleArticle.cover.type === 'file' && SingleArticle.cover.file) {
+        //             image_url = SingleArticle.cover.file.url; // Get the image URL
+        //         }
 
-                // Return the article details
-                return new Response(JSON.stringify({
-                    id: SingleArticle.id,
-                    title,
-                    released_date,
-                    category: category.join(', '), // Join categories into a string
-                    image_url,
-                }), { status: 200 });
-            } else {
-                return new Response("Article not found.", { status: 404 });
-            }
-        }
+        //         // Return the article details
+        //         return new Response(JSON.stringify({
+        //             id: SingleArticle.id,
+        //             title,
+        //             released_date,
+        //             category: category.join(', '), // Join categories into a string
+        //             image_url,
+        //         }), { status: 200 });
+        //     } else {
+        //         return new Response("Article not found.", { status: 404 });
+        //     }
+        // }
 
 
 
@@ -229,8 +239,14 @@ export async function GET(request: Request) {
                 }
 
                 // Fetch Image URL
-                if (pageObject.cover && pageObject.cover.type === 'file' && pageObject.cover.file) {
-                    image_url = pageObject.cover.file.url; // Get the image URL
+                const fileName = `${pageObject.id}.jpg`; // Adjust extension if necessary
+                const filePath = path.join(imagesFolder, fileName);
+                if (fs.existsSync(filePath)) {
+                    image_url = `/images/${fileName}`;
+                }else{
+                    if (pageObject.cover && pageObject.cover.type === 'file' && pageObject.cover.file) {
+                        image_url = pageObject.cover.file.url; // Get the image URL
+                    }
                 }
 
                 return {
@@ -238,11 +254,11 @@ export async function GET(request: Request) {
                     id: pageObject.id,
                     title: title,
                     released_date: released_date,
-                    category: category,
+                    category: category.join(', '), // Join categories into a string
                     image_url: image_url,
                     article_url: article_url,
-                    // page: pageObject,
-                    // no_of_record:no_of_record
+                    page: pageObject,
+                    content:"no_of_record" // Add the processed HTML content
                 };
             });
 
@@ -264,5 +280,118 @@ function formatString(fetchForCategory: string): string {
         .split('-') // Split the string into words
         .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize each word
         .join(' '); // Join the words with spaces
+}
+
+
+// Function to fetch a specific article by ID
+async function fetchArticleById(articleId: string) {
+    try {
+        const databaseId = process.env.NEXT_PUBLIC_NOTION_DATABASE_ID;
+        if (!databaseId) {
+            throw new Error("Database ID is not defined in environment variables");
+        }
+        // Fetch the page details
+        const page = await notion.pages.retrieve({ page_id: articleId });
+
+        // const properties = singleArticle.properties;
+        const pageObject = page as PageObjectResponse;
+        const properties = pageObject.properties;
+
+
+        // Extract article details
+        let title = "Untitled";
+        let released_date: string | null = null;
+        let category: string[] = [];
+        let image_url: string | null = null;
+
+        // Fetch Title Name
+        if (properties.Name && properties.Name.type === 'title' && properties.Name.title.length > 0) {
+            const richTextItem = properties.Name.title[0]; // Get the first rich text item
+            if ('text' in richTextItem) { // Check if it has a 'text' property
+                title = richTextItem.text.content; // Access the text content
+            }
+        }
+
+        // Fetch Released Date
+        if (properties.Date && properties.Date.type === 'date' && properties.Date.date) {
+            released_date = formatDate(properties.Date.date.start); // Format the date
+        }
+
+        // Fetch Categories
+        if (properties.Tags && properties.Tags.type === 'multi_select') {
+            category = properties.Tags.multi_select.map(tag => tag.name); // Get the names of the tags
+        }
+
+        // Fetch Image URL
+        if ('cover' in pageObject && pageObject.cover && pageObject.cover.type === 'file' && pageObject.cover.file) {
+            image_url = pageObject.cover.file.url; // Get the image URL
+        }
+
+        // Fetch child blocks (page content)
+        const childBlocks = await notion.blocks.children.list({
+            block_id: page.id,
+            page_size: 100, // Adjust page size as needed
+        });
+        const childBlocksResponse = childBlocks.results;
+
+        // Process child blocks and generate HTML content
+        const filteredChildBlocks = childBlocksResponse.filter((block): block is BlockObjectResponse => 'type' in block);
+        const htmlContent = processChildBlocks(filteredChildBlocks);
+
+
+        // Return the article details
+        return {
+            id: page.id,
+            title,
+            released_date,
+            category: category.join(', '), // Join categories into a string
+            image_url,
+            content: htmlContent, // Add the processed HTML content
+        };
+    } catch (error) {
+        console.error("Error fetching article by ID:", error);
+        throw error; // Re-throw the error to handle it in the main function
+    }
+}
+
+// Function to process child blocks and return HTML content
+import { BlockObjectResponse } from "@notionhq/client/build/src/api-endpoints"; // Import the correct type
+
+function processChildBlocks(childBlocks: BlockObjectResponse[]): string {
+    return childBlocks
+        .map((block) => parseBlockContent(block)) // Parse each block
+        .join(''); // Join all HTML content into a single string
+}
+// Function to parse Notion blocks and return HTML content
+function parseBlockContent(block: BlockObjectResponse): string {
+    if ('type' in block) {
+        switch (block.type) {
+            case 'paragraph':
+                return `<p>${block.paragraph.rich_text.map(text => text.plain_text).join(' ')}</p>`;
+            case 'heading_1':
+                return `<h1>${block.heading_1.rich_text.map(text => text.plain_text).join(' ')}</h1>`;
+            case 'heading_2':
+                return `<h2>${block.heading_2.rich_text.map(text => text.plain_text).join(' ')}</h2>`;
+            case 'heading_3':
+                return `<h3>${block.heading_3.rich_text.map(text => text.plain_text).join(' ')}</h3>`;
+            case 'bulleted_list_item':
+                return `<li>${block.bulleted_list_item.rich_text.map(text => text.plain_text).join(' ')}</li>`;
+            case 'numbered_list_item':
+                return `<li>${block.numbered_list_item.rich_text.map(text => text.plain_text).join(' ')}</li>`;
+            case 'image':
+                const imageUrl = block.image.type === 'file' ? block.image.file.url : block.image.external.url;
+                return `<img src="${imageUrl}" alt="${block.image.caption?.map(text => text.plain_text).join(' ') || ''}" />`;
+            case 'quote':
+                return `<blockquote>${block.quote.rich_text.map(text => text.plain_text).join(' ')}</blockquote>`;
+            case 'code':
+                return `<pre><code>${block.code.rich_text.map(text => text.plain_text).join(' ')}</code></pre>`;
+            case 'divider':
+                return `<hr />`;
+            // Add more cases as needed for other block types
+            default:
+                return '';
+        }
+    }
+    return '';
 }
 

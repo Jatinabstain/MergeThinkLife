@@ -5,4 +5,5 @@ export type ArticleItem = {
     category: string;
     image_url: string;
     article_url: string;
+    content: string | null;
 };

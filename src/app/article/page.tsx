@@ -32,6 +32,7 @@ function SingleArticleFunction() {
     const toggleSidebar = () => {
         setSidebarVisible(!isSidebarVisible); // Toggle the visibility
     };
+    console.log(SingleArticle)
 
     const loading = loadingSingleArticle;
     const error = errorSingleArticle;
@@ -64,7 +65,8 @@ function SingleArticleFunction() {
                             </div>
 
                             <div className="artical_inner">
-                                <p className='mb-8'> No Content Available</p>
+                                {/* <p className='mb-8'>{SingleArticle.content ?? "No Content Available" } </p> */}
+                                <p dangerouslySetInnerHTML={{ __html: SingleArticle.content ?? 'No Content Available' }} />
                             </div>
                         </div>
                         <div className="lg:w-1/4">
@@ -132,7 +134,7 @@ export default function Article() {
                     <SingleArticleFunction />
                 </Suspense>
 
-                <section className='mb-32'>
+                <section className='mb-32 mt-5'>
                     <div className="article_heading flex gap-[10.67px] items-center mb-4">
                         <h3>Our Recent Articles</h3>
                     </div>

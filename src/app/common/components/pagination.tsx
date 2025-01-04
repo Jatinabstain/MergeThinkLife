@@ -11,16 +11,37 @@ export default function pagination({ currentPage, totalPages, onPageChange }: Pa
 
     const pageNumbers = [];
 
-    if (totalPages <= 2) {
+    // if (totalPages <= 2) {
+    //     for (let i = 1; i <= totalPages; i++) {
+    //         pageNumbers.push(i);
+    //     }
+    // } else {
+    //     if (currentPage <= 3) {
+    //         pageNumbers.push(1, 2, 3, '...', totalPages);
+    //     } else if (currentPage >= totalPages - 2) {
+    //         pageNumbers.push(1, '...', totalPages - 2, totalPages - 1, totalPages);
+    //     } else {
+    //         pageNumbers.push(1, '...', currentPage, '...', totalPages);
+    //     }
+    // }
+
+    if (totalPages <= 3) {
+        // Display all page numbers directly for small page counts
         for (let i = 1; i <= totalPages; i++) {
             pageNumbers.push(i);
         }
     } else {
+        // Ensure currentPage is within valid range
+        currentPage = Math.max(1, Math.min(currentPage, totalPages));
+    
         if (currentPage <= 3) {
+            // First few pages
             pageNumbers.push(1, 2, 3, '...', totalPages);
         } else if (currentPage >= totalPages - 2) {
+            // Last few pages
             pageNumbers.push(1, '...', totalPages - 2, totalPages - 1, totalPages);
         } else {
+            // Middle pages
             pageNumbers.push(1, '...', currentPage, '...', totalPages);
         }
     }

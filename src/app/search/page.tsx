@@ -43,16 +43,28 @@ function ArticleFunction() {
     const searchParams = useSearchParams();
     const [categoryParam, setCategoryParam] = useState<string | null>(null);
     const [queryParam, setQueryParam] = useState<string | null>(null);
- 
+
     useEffect(() => {
         const categoryParam = searchParams.get('category');
-        const queryParam = searchParams.get('s');
         setCategoryParam(categoryParam);
+    }, [searchParams]);
+
+    useEffect(() => {
+        const queryParam = searchParams.get('s');
         setQueryParam(queryParam);
     }, [searchParams]);
 
-    const fetchFor = categoryParam ? "CategoryArticle" : "SearchQuery";
-    const toFetch = categoryParam || queryParam;
+    let fetchFor = "";
+    let toFetch = "";
+    if (categoryParam) {
+        fetchFor = "CategoryArticle";
+        toFetch = categoryParam;
+    }
+    if (queryParam) {
+        fetchFor = "SearchQuery";
+        toFetch = queryParam;
+    }
+
 
     const { data: fetchedArticles, loading: loadingfetchedArticles, error: errorfetchedArticles } = useNotionClient({ fetchFor: fetchFor, toFetch: toFetch });
 

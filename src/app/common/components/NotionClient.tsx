@@ -1,6 +1,6 @@
 "use client"; // This line makes it a client component
 
-import { useState, useEffect } from "react";
+import { useState, useEffect,useRef } from "react";
 
 // Define the structure of the data returned from the API
 export interface NotionPage {
@@ -12,6 +12,7 @@ export interface NotionPage {
     image_url: string;
     article_url: string;
     href: string;
+    content: string | null;
 }
 
 interface NotionClientProps {
@@ -24,15 +25,25 @@ const useNotionClient = ({ fetchFor, toFetch }: NotionClientProps) => {
     const [data, setData] = useState<NotionPage[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
+    const saveImageCalledRef = useRef<boolean>(false); // Tracks if saveImage was already called
 
     useEffect(() => {
+        const saveImage = async (result: { id: string; image_url: string }[]) => {
+            await fetch('/api/saveimages', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ pages: result }),
+            });
+
+        }
+        console.log("fetchFor", fetchFor);
         const fetchData = async () => {
             setLoading(true);
             setError(null); // Reset error state before fetching
             try {
                 let url: string;
-
-
                 // Determine the URL based on the fetchFor value
                 switch (fetchFor) {
                     case "Categories":
@@ -78,6 +89,20 @@ const useNotionClient = ({ fetchFor, toFetch }: NotionClientProps) => {
                 }
 
                 const result: NotionPage[] = await response.json();
+
+                // Ensure saveImage runs only once per page
+                if (!saveImageCalledRef.current && Array.isArray(result)) {
+                    const filteredResult = result
+                        .filter((page) => page.image_url)
+                        .map((page) => ({
+                            id: page.id,
+                            image_url: page.image_url,
+                        }));
+
+                    saveImage(filteredResult);
+                    saveImageCalledRef.current = true; // Mark as executed
+                }
+
                 setData(result);
             } catch (error) { // Use 'unknown' for error handling
                 console.error("Failed to fetch data", error);
