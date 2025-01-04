@@ -20,15 +20,22 @@ function Input() {
     const [searchQuery, setSearchQuery] = useState('');
     const [href, setHref]   =   useState('blog');
 
+    // onchange event for search input
     const handleInputChange =   (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchQuery(event.target.value);
-        setHref(`/search?s=${encodeURIComponent(event.target.value)}`); 
+        if  (event.target.value){
+            setHref(`/search?s=${encodeURIComponent(event.target.value)}`);
+        }else{
+            setHref(`/blog`);
+        } 
     };
 
+    // on submit event for search input
     useEffect(() => {
         const categoryParam =   searchParams.get('s') || '';
         setSearchQuery(categoryParam);
-        setHref(`/search?s=${categoryParam}`);
+        if  (categoryParam) setHref(`/search?s=${categoryParam}`);
+        // setHref(`/search?s=${categoryParam}`);
     }, [searchParams]);
 
     return (

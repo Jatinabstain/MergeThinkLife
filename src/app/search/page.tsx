@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { useState, useEffect,Suspense } from 'react';
 
 import Header from '../common/header';
 import Footer from '../common/footer';
@@ -11,6 +11,8 @@ import useNotionClient from '../common/components/NotionClient';
 import { CategoryItem } from '@/types/categoryTypes';
 import { ArticleItem } from '@/types/articleCardTypes';
 import Loader from '../common/components/loader/loader';
+import CategoryLoader from '../common/components/loader/CategoryLoader';
+import PaginationLoader from '../common/components/loader/PaginationLoader';
 import { useSearchParams } from 'next/navigation';
 import NoResultsFound from '../common/components/noResultsFound/noResultsFound';
 import Error from '../error500/page';
@@ -24,12 +26,12 @@ export default function Search() {
                 <SearchInput />
 
                 {/* Blog */}
-                <Suspense fallback={<Loader />}>
+                <Suspense>
                     <BlogTabFunction />
                 </Suspense>
 
                 {/* Articles */}
-                <Suspense fallback={<Loader />}>
+                <Suspense>
                     <ArticleFunction />
                 </Suspense>
             </div>
@@ -68,32 +70,32 @@ function ArticleFunction() {
 
     const { data: fetchedArticles, loading: loadingfetchedArticles, error: errorfetchedArticles } = useNotionClient({ fetchFor: fetchFor, toFetch: toFetch });
 
-    const loading   =   loadingfetchedArticles;
-    const error     =   errorfetchedArticles;
+    const loading = loadingfetchedArticles;
+    const error = errorfetchedArticles;
 
-    const [currentPage, setCurrentPage]         =   useState(1);
-    const [currentArticles, setCurrentArticles] =   useState<ArticleItem[]>([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [currentArticles, setCurrentArticles] = useState<ArticleItem[]>([]);
 
-    const totalArticles     =   fetchedArticles.length || 0;
-    const articlesPerPage   =   3;
-    const totalPages        =   Math.ceil(totalArticles / articlesPerPage);
+    const totalArticles = fetchedArticles.length || 0;
+    const articlesPerPage = 3;
+    const totalPages = Math.ceil(totalArticles / articlesPerPage);
 
     useEffect(() => {
         if (fetchedArticles) {
-            const startIndex    =   (currentPage - 1) * articlesPerPage;
-            const endIndex      =   startIndex + articlesPerPage;
+            const startIndex = (currentPage - 1) * articlesPerPage;
+            const endIndex = startIndex + articlesPerPage;
             setCurrentArticles(fetchedArticles.slice(startIndex, endIndex));
         }
     }, [fetchedArticles, currentPage]);
 
-    const handlePageChange  =   (newPage: number) => {
+    const handlePageChange = (newPage: number) => {
         setCurrentPage(newPage);
-        const startIndex    =   (newPage - 1) * articlesPerPage;
-        const endIndex      =   startIndex + articlesPerPage;
+        const startIndex = (newPage - 1) * articlesPerPage;
+        const endIndex = startIndex + articlesPerPage;
         setCurrentArticles(fetchedArticles.slice(startIndex, endIndex));
     };
 
-    if (loading) return <><Loader /></>;
+
     if (error) {
         return (
             <div>
@@ -102,23 +104,34 @@ function ArticleFunction() {
         );
     }
     return (
+
         <>
+            <section className='mb-16'>
+                <div className="article_heading flex gap-[10.67px] items-center mb-4">
+                    <h3>Articles</h3>
+                </div>
+                {loading ? (
+                    <Loader />
+                ) : (
+                    <>
+                        {currentArticles.length > 0 && currentArticles ? (
+                            <ArticleCard articles={currentArticles} />
+                        ) : (
+                            <NoResultsFound message={null} />
+                        )}
+                    </>
+
+                )}
+
+            </section>
             {currentArticles.length > 0 && currentArticles ? (
-                <>
-                    <section className='mb-16'>
-                        <div className="article_heading flex gap-[10.67px] items-center mb-4">
-                            <h3>Articles</h3>
-                        </div>
-                        <ArticleCard articles={currentArticles} />
-                    </section>
-                    <Pagination
-                        currentPage={currentPage}
-                        totalPages={totalPages}
-                        onPageChange={handlePageChange}
-                    />
-                </>
+                <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={handlePageChange}
+                />
             ) : (
-                <NoResultsFound  message={null} />
+                <PaginationLoader />
             )}
         </>
     );
@@ -143,10 +156,10 @@ function BlogTabFunction() {
         href: category.href
     })) : [];
 
-    const loading   =   loadingCategories;
-    const error     =   errorCategories;
+    const loading = loadingCategories;
+    const error = errorCategories;
 
-    if (loading) return <><Loader /></>;
+    if (loading) return <CategoryLoader />;
     if (error) {
         console.log(error)
         return (

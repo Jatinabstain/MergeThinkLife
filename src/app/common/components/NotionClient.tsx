@@ -10,6 +10,7 @@ export interface NotionPage {
     released_date: string;
     category: string;
     image_url: string;
+    server_image_url: string;
     article_url: string;
     href: string;
     content: string | null;
@@ -93,15 +94,16 @@ const useNotionClient = ({ fetchFor, toFetch }: NotionClientProps) => {
                 // Ensure saveImage runs only once per page
                 if (!saveImageCalledRef.current && Array.isArray(result)) {
                     const filteredResult = result
-                        .filter((page) => page.image_url)
+                        .filter((page) => page.server_image_url )
                         .map((page) => ({
                             id: page.id,
-                            image_url: page.image_url,
+                            image_url: page.server_image_url    ,
                         }));
 
                     saveImage(filteredResult);
                     saveImageCalledRef.current = true; // Mark as executed
                 }
+
 
                 setData(result);
             } catch (error) { // Use 'unknown' for error handling

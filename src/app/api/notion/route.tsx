@@ -248,6 +248,10 @@ export async function GET(request: Request) {
                         image_url = pageObject.cover.file.url; // Get the image URL
                     }
                 }
+                let server_image_url = '';
+                if (pageObject.cover && pageObject.cover.type === 'file' && pageObject.cover.file) {
+                    server_image_url = pageObject.cover.file.url; // Get the image URL
+                }
 
                 return {
                     serialNo: index + 1, // Add serial number (1-based index)
@@ -256,6 +260,7 @@ export async function GET(request: Request) {
                     released_date: released_date,
                     category: category.join(', '), // Join categories into a string
                     image_url: image_url,
+                    server_image_url: server_image_url,
                     article_url: article_url,
                     page: pageObject,
                     content:"no_of_record" // Add the processed HTML content

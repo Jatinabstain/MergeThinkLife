@@ -22,7 +22,7 @@ export default function HowItWorks() {
     const error     =   articleError;
 
     // Handle loading and error states
-    if (loading) return <><Loader /></>;
+    // if (loading) return <><Loader /></>;
     if (error) {
         console.log(error)
         return (
@@ -114,7 +114,12 @@ export default function HowItWorks() {
                     <div className="heading mb-8">
                         <h3>Blog</h3>
                     </div>
-                    <ArticleCard articles={articleList} />
+                    {loading ? <Loader />
+                        :  <ArticleCard articles={articleList} />
+                    }
+
+                    
+                   
                 </section>
             </div>
             <Footer />

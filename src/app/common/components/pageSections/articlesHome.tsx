@@ -9,10 +9,6 @@ import NoResultsFound from '../noResultsFound/noResultsFound';
 export default function ArticlesHome() {
     // Use the custom hook to fetch articles
     const { data: articleData, loading, error } = useNotionClient({ fetchFor: "Popular" });
-
-    // Handle loading and error states
-    if (loading) return <Loader />;
-    // if (error) return <p>Error: {error}</p>;
     if (error) console.log('Error', { error });
 
     return (
@@ -22,14 +18,18 @@ export default function ArticlesHome() {
                     <h3>Our Recent Articles</h3>
                 </div>
 
-                {(!articleData || articleData.length === 0) ? (
-                    <NoResultsFound message="Sorry, no results were found. Please try again later." />
-                ) : (
-                    <>
-                        <ArticleCard articles={articleData} />
-                        <Link href="blog" className="primary_fill_outline mt-8 mx-auto">All Articles</Link>
-                    </>
-                )}
+
+                <div className='relative' >
+                    {loading ? <Loader /> : ((!articleData || articleData.length === 0) ? (
+                        <NoResultsFound message="Sorry, no results were found. Please try again later." />
+                    ) : (
+                        <>
+                            <ArticleCard articles={articleData} />
+                            <Link href="blog" className="primary_fill_outline mt-8 mx-auto">All Articles</Link>
+                        </>
+                    ))
+                    }
+                </div>
             </div>
         </section>
     );

@@ -17,6 +17,7 @@ import { ArticleItem } from '@/types/articleCardTypes';
 function SingleArticleFunction() {
     const searchParams = useSearchParams();
     const [atrPrm, setAtrPrm] = useState<string | null>(null);
+    const [activeHeading, setActiveHeading] = useState<string | null>(null); // Track active heading
 
     useEffect(() => {
         const atrPrmFromUrl = searchParams.get('atr_prm');
@@ -27,24 +28,59 @@ function SingleArticleFunction() {
 
     const SingleArticle = data as unknown as ArticleItem | null;
 
-    const [isSidebarVisible, setSidebarVisible] = useState(true); // State to manage sidebar visibility
+    const [isSidebarVisible, setSidebarVisible] = useState(true);
+    const [headings, setHeadings] = useState<string[]>([]); // Store headings
+    const [modifiedContent, setModifiedContent] = useState<string>(''); // Modified content with ids
 
     const toggleSidebar = () => {
-        setSidebarVisible(!isSidebarVisible); // Toggle the visibility
+        setSidebarVisible(!isSidebarVisible);
     };
-    console.log(SingleArticle)
 
     const loading = loadingSingleArticle;
     const error = errorSingleArticle;
 
+    useEffect(() => {
+        if (SingleArticle?.content) {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(SingleArticle.content, 'text/html');
+            const headingElements = doc.querySelectorAll('h1, h2, h3, h4, h5, h6');
+            const headingTexts: string[] = [];
+
+            headingElements.forEach((heading) => {
+                const textContent = heading.textContent || "";
+                headingTexts.push(textContent);
+
+                // Add an id to each heading (if not already present)
+                if (!heading.id) {
+                    const id = textContent.replace(/\s+/g, '-').toLowerCase();
+                    heading.id = id; // Set the id to the heading
+                }
+            });
+
+            setHeadings(headingTexts); // Store headings
+            setModifiedContent(doc.body.innerHTML); // Set modified content with ids
+        }
+    }, [SingleArticle]);
+
     // Handle loading and error states
-    if (loading) return <><Loader /></>;
+    // if (loading) return <><Loader /></>;
+    console.log('isLoading',loading)
     if (error) {
-        console.log(error)
-        return (
-            <Error />
-        );
+        console.log(error);
+        return <Error />;
     }
+
+    // Handle click on a sidebar item to set active heading
+    const handleSidebarClick = (heading: string) => {
+        setActiveHeading(heading); // Set active heading
+        const targetId = heading.replace(/\s+/g, '-').toLowerCase(); // Convert heading to id format
+        const targetElement = document.getElementById(targetId); // Locate the target element
+    
+        if (targetElement) {
+            targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' }); // Smooth scroll to the element
+        }
+    };
+
     return (
         <>
             {SingleArticle ? (
@@ -53,7 +89,8 @@ function SingleArticleFunction() {
                         {SingleArticle.image_url && SingleArticle.image_url.length > 0 ? (
                             <Image src={SingleArticle.image_url} alt="" className="article_image" width={1140} height={524} />
                         ) : (
-                            <div className="article_image_placeholder"> <Image src={placeholder} alt="article_image" className="article_image" width={1140} height={524} />
+                            <div className="article_image_placeholder">
+                                <Image src={placeholder} alt="article_image" className="article_image" width={1140} height={524} />
                             </div>
                         )}
                     </div>
@@ -65,10 +102,13 @@ function SingleArticleFunction() {
                             </div>
 
                             <div className="artical_inner">
-                                {/* <p className='mb-8'>{SingleArticle.content ?? "No Content Available" } </p> */}
-                                <p dangerouslySetInnerHTML={{ __html: SingleArticle.content ?? 'No Content Available' }} />
+                                <div
+                                    className="notion-content"
+                                    dangerouslySetInnerHTML={{ __html: modifiedContent ?? 'No Content Available' }}
+                                ></div>
                             </div>
                         </div>
+
                         <div className="lg:w-1/4">
                             <div className="article_time">
                                 <p className='lg:mb-16 mb-8 text-right'>5 minute read</p>
@@ -78,30 +118,25 @@ function SingleArticleFunction() {
                                 <div className="article_link_toggle mb-3">
                                     <button className='flex gap-[9px] w-fit' onClick={toggleSidebar}>In this Article <Image src={arrowDown} alt="" className='icon_down' /></button>
                                 </div>
+
                                 {isSidebarVisible && (
                                     <div className="article_sidebar">
                                         <ul>
-                                            <li>
-                                                <Link href="#" className='active'>What is Accidental Death And Dismemberment Insurance (AD&D)?</Link>
-                                            </li>
-                                            <li>
-                                                <Link href="#">What is Life Insurance?</Link>
-                                            </li>
-                                            <li>
-                                                <Link href="#">AD&D vs. Life Insurance: Coverage</Link>
-                                            </li>
-                                            <li>
-                                                <Link href="#">AD&D vs. Life Insurance: Cost</Link>
-                                            </li>
-                                            <li>
-                                                <Link href="#">AD&D vs. Life Insurance: Requirements</Link>
-                                            </li>
-                                            <li>
-                                                <Link href="#">Accidental Death Insurance Vs. Life Insurance </Link>
-                                            </li>
-                                            <li>
-                                                <Link href="#">The Bottom Line </Link>
-                                            </li>
+                                            {headings.length > 0 ? (
+                                                headings.map((heading, index) => (
+                                                    <li key={index}>
+                                                        <Link
+                                                            href="javascript:void(0)"
+                                                            onClick={() => handleSidebarClick(heading)} // Mark as active
+                                                            className={activeHeading === heading ? 'active' : ''} // Apply active class
+                                                        >
+                                                            {heading}
+                                                        </Link>
+                                                    </li>
+                                                ))
+                                            ) : (
+                                                <p>No headings found</p>
+                                            )}
                                         </ul>
                                     </div>
                                 )}
@@ -119,7 +154,6 @@ function SingleArticleFunction() {
                     <p>No data Found</p>
                 </div>
             )}
-
         </>
     );
 }
@@ -145,4 +179,3 @@ export default function Article() {
         </>
     );
 }
-

@@ -13,7 +13,7 @@ import BlogTabs from '../common/components/blog/blogTabs';
 import { CategoryItem } from '@/types/categoryTypes';
 import { ArticleItem } from '@/types/articleCardTypes';
 import useNotionClient from '../common/components/NotionClient';
-import Loader from '../common/components/loader/loader';
+// import Loader from '../common/components/loader/loader';
 import Error from '../error500/page';
 
 export default function Blog() {
@@ -58,8 +58,8 @@ export default function Blog() {
     const handlePageChange = (newPage: number) => setCurrentPage(newPage);
 
     // Handle loading and error states
-    if (isLoading) return <><Loader /></>;
-
+    // if (isLoading) return <><Loader /></>;
+console.log('isLoading', isLoading)
     if (hasError) {
         console.log(hasError)
         return (

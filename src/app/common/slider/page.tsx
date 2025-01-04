@@ -8,15 +8,11 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import Loader from "../components/loader/loader";
+import Loader from "../components/loader/slider";
 import useNotionClient from "../components/NotionClient";
 
-
-
-
-
 export default function Slider() {
-       // Fetch slider articles
+   // Fetch slider articles
     const { data: sliderArticles, loading: isLoadingSliderArticles, error: sliderArticleError  } = useNotionClient({ fetchFor: "SliderArticles" });
 
     const isLoading = isLoadingSliderArticles;
@@ -25,11 +21,11 @@ export default function Slider() {
     
    // Handle loading and error states
     if (isLoading) return <Loader />;
-       if (hasError) return <div><p>Error fetching articles: {hasError}</p></div>;
+    if (hasError) return <div><p>Error fetching articles: {hasError}</p></div>;
    
     
     if (!sliderArticles || sliderArticles.length === 0) {
-        return <p>No article available.</p>;
+        return <Loader />;
     }
     return (
         <>
