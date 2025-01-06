@@ -41,7 +41,7 @@ export default function Slider() {
                         <div  className="flex flex-wrap lg:gap-y-0 gap-y-6">
                             <div className="slider_content lg:w-1/2">
                                 <h3>{item.title}</h3>
-                                {/* <p>{item.content}</p> */}
+                                <p>{item.content}</p>
                                 <small>{item.category ?? "--"}</small>
                                 <Link href={'/article?atr_prm='+item.id} className="small_outline_primary">Read More</Link>
                             </div>

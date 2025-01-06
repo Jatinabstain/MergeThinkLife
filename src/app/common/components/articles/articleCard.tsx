@@ -71,9 +71,10 @@ export default function ArticleCard({ articles }: ArticleCardProps) {
                                 <div className="article_content">
                                     <small>{item.released_date ?? "--"}</small>
                                     <h3>{item.title}</h3>
-                                    {/* <p>{item.content}</p> */}
+                                    <p>{item.content}</p>
                                     <div className="flex justify-between items-center">
                                         <p className="card_time">{item.category ?? "--"}</p>
+                                        {/* <small>{item.category ?? "--"}</small> */}
                                         <button className="btn_outline_small">Read More</button>
                                     </div>
                                 </div>

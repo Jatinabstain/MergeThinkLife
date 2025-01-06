@@ -39,7 +39,6 @@ const useNotionClient = ({ fetchFor, toFetch }: NotionClientProps) => {
             });
 
         }
-        console.log("fetchFor", fetchFor);
         const fetchData = async () => {
             setLoading(true);
             setError(null); // Reset error state before fetching

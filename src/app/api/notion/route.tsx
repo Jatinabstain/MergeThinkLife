@@ -43,14 +43,20 @@ export async function GET(request: Request) {
         }
 
         let response;
+
+
         // If fetch_art is provided, fetch the specific article by ID
         if (fetch_art) {
             const articleResponse = await fetchArticleById(fetch_art);
             return new Response(JSON.stringify(articleResponse), { status: 200 });
         }
+        // Fetch All Categoruies
+        if (fetchCategories) {
+            const CategoriesResponse = await fetchAllCategories();
+            return new Response(JSON.stringify(CategoriesResponse), { status: 200 });
+        }
 
-
-        // If ID is provided, fetch the specific article
+        // If fetchForCategory is provided, fetch the specific article of this category
         if (fetchForCategory) {
             response = '';
             // Fetch all pages from the Notion database
@@ -64,6 +70,7 @@ export async function GET(request: Request) {
                 }
             });
         }
+        // If no_of_record is provided, fetch the first 'no_of_record' number of records
         else if (no_of_record) {
             response = '';
             // Fetch 'no_of_record' pages from the Notion database
@@ -78,7 +85,7 @@ export async function GET(request: Request) {
                 }
             });
         }
-
+        // If SearchQuery is provided, fetch the articles that contain the search query
         else if (SearchQuery) {
             response = '';
             // Fetch 'SearchQuery' pages from the Notion database
@@ -92,6 +99,7 @@ export async function GET(request: Request) {
                 }
             });
         }
+        // Fetch all pages from the Notion database
         else {
             response = '';
             // Fetch all pages from the Notion database
@@ -100,87 +108,8 @@ export async function GET(request: Request) {
             });
         }
 
-
-
-        // Handle fetching a specific article by ID : SingleArticle
-        // if (fetch_art) {
-        //     const articles = response.results as PageObjectResponse[]; // Cast to PageObjectResponse array
-
-        //     // Filter the articles to find the one with the matching ID
-        //     const SingleArticle = articles.find(page => page.id === fetch_art);
-
-        //     if (SingleArticle) {
-        //         const properties = SingleArticle.properties;
-
-        //         // Extract article details
-        //         let title = "Untitled";
-        //         let released_date: string | null = null;
-        //         let category: string[] = [];
-        //         let image_url: string | null = null;
-
-        //         // Fetch Title Name
-        //         if (properties.Name && properties.Name.type === 'title' && properties.Name.title.length > 0) {
-        //             const richTextItem = properties.Name.title[0]; // Get the first rich text item
-        //             if ('text' in richTextItem) { // Check if it has a 'text' property
-        //                 title = richTextItem.text.content; // Access the text content
-        //             }
-        //         }
-
-        //         // Fetch Released Date
-        //         if (properties.Date && properties.Date.type === 'date' && properties.Date.date) {
-        //             released_date = formatDate(properties.Date.date.start); // Format the date
-        //         }
-
-        //         // Fetch Categories
-        //         if (properties.Tags && properties.Tags.type === 'multi_select') {
-        //             category = properties.Tags.multi_select.map(tag => tag.name); // Get the names of the tags
-        //         }
-
-
-        //         // Fetch Image URL
-        //         if (SingleArticle.cover && SingleArticle.cover.type === 'file' && SingleArticle.cover.file) {
-        //             image_url = SingleArticle.cover.file.url; // Get the image URL
-        //         }
-
-        //         // Return the article details
-        //         return new Response(JSON.stringify({
-        //             id: SingleArticle.id,
-        //             title,
-        //             released_date,
-        //             category: category.join(', '), // Join categories into a string
-        //             image_url,
-        //         }), { status: 200 });
-        //     } else {
-        //         return new Response("Article not found.", { status: 404 });
-        //     }
-        // }
-
-
-
-        // Fetch All Categoruies
-        if (fetchCategories) {
-            const categories = response.results.flatMap((page, index) => {
-                const pageObject = page as PageObjectResponse; // Cast to PageObjectResponse
-                const properties = pageObject.properties;
-
-                // Fetch Categories
-                if (properties.Tags && properties.Tags.type === 'multi_select') {
-                    return properties.Tags.multi_select.map(tag => ({
-                        id: index + 1, // Use the index from the flatMap
-                        href: `${tag.name.replace(/\s+/g, '-').toLowerCase()}`, // Create href by replacing spaces with dashes and converting to lowercase
-                        name: tag.name // Get the category name
-                    }));
-                }
-                return [];
-            });
-
-            // Get unique categories based on name
-            const uniqueCategories = Array.from(new Map(categories.map(item => [item.name, item])).values());
-            return new Response(JSON.stringify(uniqueCategories), { status: 200 });
-        }
-
         // Your existing logic to handle articles or other data
-        const articles = response.results
+        const articles = await Promise.all(response.results
 
             // Filter  for Green Status
             .filter((page) => {
@@ -198,7 +127,7 @@ export async function GET(request: Request) {
             })
 
             // Maping array for Articles 
-            .map((page, index) => {
+            .map(async (page, index) => {
 
                 // Cast to PageObjectResponse
                 const pageObject = page as PageObjectResponse;
@@ -243,7 +172,7 @@ export async function GET(request: Request) {
                 const filePath = path.join(imagesFolder, fileName);
                 if (fs.existsSync(filePath)) {
                     image_url = `/images/${fileName}`;
-                }else{
+                } else {
                     if (pageObject.cover && pageObject.cover.type === 'file' && pageObject.cover.file) {
                         image_url = pageObject.cover.file.url; // Get the image URL
                     }
@@ -251,6 +180,23 @@ export async function GET(request: Request) {
                 let server_image_url = '';
                 if (pageObject.cover && pageObject.cover.type === 'file' && pageObject.cover.file) {
                     server_image_url = pageObject.cover.file.url; // Get the image URL
+                }
+
+                // Fetch child blocks (page content)
+                const childBlocks = await notion.blocks.children.list({
+                    block_id: page.id,
+                    page_size: 100, // Adjust page size as needed
+                });
+                const childBlocksResponse = childBlocks.results;
+
+                // Process child blocks and generate HTML content
+                const filteredChildBlocks = childBlocksResponse.filter((block): block is BlockObjectResponse => 'type' in block);
+
+                // Get the first 50 characters of the content
+                let previewContent = filteredChildBlocks.map(block => block.type === 'paragraph' ? block.paragraph.rich_text.map(text => text.plain_text).join(' ') : '').join(' ');
+                const words = previewContent.split(' ');
+                if (words.length > 20) {
+                    previewContent = words.slice(0, 20).join(' ') + '...';
                 }
 
                 return {
@@ -262,10 +208,11 @@ export async function GET(request: Request) {
                     image_url: image_url,
                     server_image_url: server_image_url,
                     article_url: article_url,
+                    content: previewContent, // Add the processed HTML content
                     page: pageObject,
-                    content:"no_of_record" // Add the processed HTML content
                 };
-            });
+            })
+        );
 
         // If no_of_record is provided, slice the results
         // if (no_of_record) {
@@ -276,7 +223,7 @@ export async function GET(request: Request) {
         return new Response(JSON.stringify(articles), { status: 200 }); // Return articles as JSON response
     } catch (error) {
         console.error("Error fetching data from Notion:", error);
-        return new Response("Error fetching data", { status: 500 }); // Handle errors
+        return new Response(JSON.stringify({ error: 'Failed to fetch articles' }), { status: 500 });
     }
 }
 
@@ -288,7 +235,7 @@ function formatString(fetchForCategory: string): string {
 }
 
 
-// Function to fetch a specific article by ID
+// Function to fetch a Single article by ID
 async function fetchArticleById(articleId: string) {
     try {
         const databaseId = process.env.NEXT_PUBLIC_NOTION_DATABASE_ID;
@@ -359,6 +306,70 @@ async function fetchArticleById(articleId: string) {
     }
 }
 
+// Function to fetch all categories
+async function fetchAllCategories() {
+    try {
+        const databaseId = process.env.NEXT_PUBLIC_NOTION_DATABASE_ID;
+        if (!databaseId) {
+            throw new Error("Database ID is not defined in environment variables");
+        }
+        const response = await notion.databases.query({
+            database_id: databaseId,
+            filter: {
+                property: 'Tags',
+                multi_select: {
+                    is_not_empty: true, // Ensure the Tags field is not empty
+                },
+            },
+        });
+        const categories = response.results.flatMap((page, index) => {
+            const pageObject = page as PageObjectResponse; // Cast to PageObjectResponse
+            const properties = pageObject.properties;
+
+            // Fetch Categories
+            if (properties.Tags && properties.Tags.type === 'multi_select') {
+                return properties.Tags.multi_select.map(tag => ({
+                    id: index + 1, // Use the index from the flatMap
+                    href: `${tag.name.replace(/\s+/g, '-').toLowerCase()}`, // Create href by replacing spaces with dashes and converting to lowercase
+                    name: tag.name // Get the category name
+                }));
+            }
+            return [];
+        });
+
+        // Get unique categories based on name
+        const uniqueCategories = Array.from(new Map(categories.map(item => [item.name, item])).values());
+        return uniqueCategories.map((category, index) => ({
+            ...category,
+            id: index + 1 // Increment the index for unique categories
+        }));
+    } catch (error) {
+        console.error("Error fetching categories:", error);
+        return new Response(JSON.stringify({ error: 'Failed to fetch categories' }), { status: 500 });
+    }
+
+    // const categories = response.results.flatMap((page, index) => {
+    //     const pageObject = page as PageObjectResponse; // Cast to PageObjectResponse
+    //     const properties = pageObject.properties;
+
+    //     // Fetch Categories
+    //     if (properties.Tags && properties.Tags.type === 'multi_select') {
+    //         return properties.Tags.multi_select.map(tag => ({
+    //             id: index + 1, // Use the index from the flatMap
+    //             href: `${tag.name.replace(/\s+/g, '-').toLowerCase()}`, // Create href by replacing spaces with dashes and converting to lowercase
+    //             name: tag.name // Get the category name
+    //         }));
+    //     }
+    //     return [];
+    // });
+
+    // // Get unique categories based on name
+    // const uniqueCategories = Array.from(new Map(categories.map(item => [item.name, item])).values());
+    // return new Response(JSON.stringify(uniqueCategories), { status: 200 });
+
+}
+
+
 // Function to process child blocks and return HTML content
 import { BlockObjectResponse } from "@notionhq/client/build/src/api-endpoints"; // Import the correct type
 
@@ -399,4 +410,3 @@ function parseBlockContent(block: BlockObjectResponse): string {
     }
     return '';
 }
-
