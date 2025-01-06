@@ -12,6 +12,7 @@ type ArticleCardProps = {
     articles: ArticleItem[] | null; // Menu can be an array or null
 };
 export default function ArticleCard({ articles }: ArticleCardProps) {
+    console.log("articles", articles);
 
     if (!articles || articles.length === 0) {
         return (
@@ -58,7 +59,8 @@ export default function ArticleCard({ articles }: ArticleCardProps) {
             <div className="grid items-start gap-[38px] lg:grid-cols-3 md:grid-cols-2">
                 {articles.map((item) => (
                     <div key={item.id} className="h-full">
-                        <Link href={'/article?atr_prm=' + item.id}>
+                        {/* <Link href={'/article?atr_prm=' + item.id}> */}
+                        <Link href={'/article/' + item.article_url}>
                             <div className="article_card">
                                 <div className="position-relative">
                                     {item.image_url && item.image_url.length > 0 ? (

@@ -200,16 +200,16 @@ export async function GET(request: Request) {
                 }
 
                 return {
-                    serialNo: index + 1, // Add serial number (1-based index)
-                    id: pageObject.id,
-                    title: title,
-                    released_date: released_date,
-                    category: category.join(', '), // Join categories into a string
-                    image_url: image_url,
-                    server_image_url: server_image_url,
-                    article_url: article_url,
-                    content: previewContent, // Add the processed HTML content
-                    page: pageObject,
+                        serialNo: index + 1, // Add serial number (1-based index)
+                        id: pageObject.id,
+                        title: title,
+                        released_date: released_date,
+                        category: category.join(', '), // Join categories into a string
+                        image_url: image_url,
+                        server_image_url: server_image_url,
+                        article_url: article_url,
+                        content: previewContent, // Add the processed HTML content
+                        page: pageObject,
                 };
             })
         );
@@ -242,8 +242,12 @@ async function fetchArticleById(articleId: string) {
         if (!databaseId) {
             throw new Error("Database ID is not defined in environment variables");
         }
+        // Extract and format the page ID from the URL
+        const pageIdPart = articleId.split('-').pop();
+        const pageId = pageIdPart ? pageIdPart.replace(/(.{8})(.{4})(.{4})(.{4})(.+)/, '$1-$2-$3-$4-$5') : '';
+
         // Fetch the page details
-        const page = await notion.pages.retrieve({ page_id: articleId });
+        const page = await notion.pages.retrieve({ page_id: pageId });
 
         // const properties = singleArticle.properties;
         const pageObject = page as PageObjectResponse;
