@@ -1,6 +1,5 @@
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
-import Link from "next/link";
 import { Autoplay, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -18,7 +17,7 @@ export default function slider() {
                                     <h3><Skeleton width={200} /></h3>
                                     <p><Skeleton count={3} /></p>
                                     <small><Skeleton width={100} /></small>
-                                    <Link href="#" className="small_outline_primary"><Skeleton width={80} /></Link>
+                                    <Skeleton width={80} />
                                 </div>
                                 <div className="slider_image lg:w-1/2 text-end">
                                     <Skeleton width={387} height={176} />
