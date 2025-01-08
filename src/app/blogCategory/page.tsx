@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 
 import Header from '../common/header';
 import Footer from '../common/footer';
-import Search from '../common/search/page';
+// import Search from '../common/search/page';
 import ArticleCard from '../common/components/articles/articleCard';
 import Pagination from '../common/components/pagination';
 import BlogTabs from '../common/components/blog/blogTabs';
@@ -85,8 +85,8 @@ export default function BlogCategory() {
     return (
         <>
             <Header />
-            <div className="mx-auto max-w-[1200px] px-8">
-                <Search />
+            <div className="mx-auto max-w-[1200px] px-8 pt-16">
+                {/* <Search /> */}
                 <BlogTabs category={categories} active_cat={null}/>
 
                 <section className='mb-16'>

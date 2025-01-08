@@ -2,7 +2,7 @@ import Image from 'next/image'
 import Header from '../common/header';
 import Footer from '../common/footer';
 import noResults from '../../../public/assets/no-results.svg';
-import Search from '../common/search/page';
+// import Search from '../common/search/page';
 
 export default function noResultsFound() {
     return (
@@ -10,7 +10,7 @@ export default function noResultsFound() {
             <Header />
             <div className="mx-auto max-w-[1200px] px-8">
                 <div className="min-h-screen bubble_bg flex flex-wrap flex-col">
-                    <Search />
+                    {/* <Search /> */}
                     <div className="comming_soon mt-12">
                         <Image src={noResults} alt='coming soon' className='mx-auto mb-7' />
                         <div className="error_content">

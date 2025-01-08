@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 
 import Header from '../common/header';
 import Footer from '../common/footer';
-import Search from '../common/search/page';
+// import Search from '../common/search/page';
 import Image from 'next/image';
 import HeadingStar from '../../../public/assets/heading-star.svg'
 import ArticleCard from '../common/components/articles/articleCard';

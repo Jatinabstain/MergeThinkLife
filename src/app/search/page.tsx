@@ -3,7 +3,7 @@ import React, { useState, useEffect,Suspense } from 'react';
 
 import Header from '../common/header';
 import Footer from '../common/footer';
-import SearchInput from '../common/search/page';
+// import SearchInput from '../common/search/page';
 import ArticleCard from '../common/components/articles/articleCard';
 import Pagination from '../common/components/pagination';
 import BlogTabs from '../common/components/blog/blogTabs';
@@ -21,9 +21,9 @@ export default function Search() {
     return (
         <>
             <Header />
-            <div className="mx-auto max-w-[1200px] px-8">
+            <div className="mx-auto max-w-[1200px] px-8 pt-16">
 
-                <SearchInput />
+                {/* <SearchInput /> */}
 
                 {/* Blog */}
                 <Suspense>
