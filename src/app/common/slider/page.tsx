@@ -38,7 +38,7 @@ export default function Slider() {
 
                     {sliderArticles.map((item) => (
                     <SwiperSlide  key={item.id}>
-                        <div  className="flex flex-wrap lg:gap-y-0 gap-y-6">
+                        <div  className="flex flex-wrap lg:gap-y-0 gap-y-6 justify-between">
                             <div className="slider_content lg:w-1/2">
                                 <h3>{item.title}</h3>
                                 <p>{item.content}</p>

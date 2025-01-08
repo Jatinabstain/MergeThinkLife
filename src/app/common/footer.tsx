@@ -56,14 +56,14 @@ export default function Footer() {
                                     <h3 className='text-base leading-4 font-medium mb-9'>Get in touch</h3>
                                     <ul>
                                         <li>
-                                            <Link href="#" className='leading-4 flex gap-[22px] items-center'>
+                                            <Link href="tel:(800) 227-0031" className='leading-4 flex gap-[22px] items-center'>
                                                 <Image
                                                 src={call}
                                                 alt="call"
-                                            /> +1 (319) 555-0115</Link>
+                                            /> (800) 227-0031</Link>
                                         </li>
                                         <li>
-                                        <Link href="#" className='leading-4 flex gap-[22px] items-start'><Image
+                                        <Link href="mailto:info@thinklife.com" className='leading-4 flex gap-[22px] items-start'><Image
                                                 src={mail}
                                                 alt="mail"
                                             /> info@thinklife.com</Link>
@@ -72,7 +72,7 @@ export default function Footer() {
                                         <Link href="#" className='leading-4 flex gap-[22px] items-start'><Image
                                                 src={location}
                                                 alt="location"
-                                            /> 4517 Washington Ave. Manchester, Kentucky 39495</Link>
+                                            /> 330 N Brand Blvd, Suite 702 Glendale, CA 91203</Link>
                                         </li>
                                     </ul>
                                 </div>

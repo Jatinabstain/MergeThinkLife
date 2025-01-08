@@ -3,7 +3,7 @@ import 'react-loading-skeleton/dist/skeleton.css'
 
 export default function loader() {
     return (
-        <SkeletonTheme baseColor="#e1e1e1" highlightColor="#f2f2f2">
+        <SkeletonTheme baseColor="#F1EDFD" highlightColor="#ffffff" borderRadius={12}>
             <div className="grid items-start gap-[38px] lg:grid-cols-3 md:grid-cols-2">
                 <div className="h-full">
                     <Skeleton height={176} />

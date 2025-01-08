@@ -3,7 +3,7 @@ import 'react-loading-skeleton/dist/skeleton.css';
 
 export default function PaginationLoader() {
     return (
-        <SkeletonTheme baseColor="#e1e1e1" highlightColor="#f2f2f2">
+        <SkeletonTheme baseColor="#F1EDFD" highlightColor="#ffffff" borderRadius={12}>
             <div className="flex justify-center items-center mb-32">
                 <div className="pagination">
                     <ul className="flex items-center">

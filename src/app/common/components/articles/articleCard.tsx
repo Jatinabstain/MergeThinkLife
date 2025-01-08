@@ -16,7 +16,7 @@ export default function ArticleCard({ articles }: ArticleCardProps) {
 
     if (!articles || articles.length === 0) {
         return (
-            <SkeletonTheme baseColor="#e1e1e1" highlightColor="#f2f2f2">
+            <SkeletonTheme baseColor="#F1EDFD" highlightColor="#ffffff" borderRadius={12}>
                 <div className="grid items-start gap-[38px] lg:grid-cols-3 md:grid-cols-2">
                     <div className="h-full">
                         <Skeleton height={176} />
@@ -25,7 +25,7 @@ export default function ArticleCard({ articles }: ArticleCardProps) {
                             <h3><Skeleton width={200} /></h3>
                             <div className="flex justify-between items-center">
                                 <p className="card_time"><Skeleton width={100} /></p>
-                                <button className="btn_outline_small"><Skeleton width={100} /></button>
+                                <Skeleton width={100} />
                             </div>
                         </div>
                     </div>
@@ -36,7 +36,7 @@ export default function ArticleCard({ articles }: ArticleCardProps) {
                             <h3><Skeleton width={200} /></h3>
                             <div className="flex justify-between items-center">
                                 <p className="card_time"><Skeleton width={100} /></p>
-                                <button className="btn_outline_small"><Skeleton width={100} /></button>
+                                <Skeleton width={100} />
                             </div>
                         </div>
                     </div>
@@ -47,7 +47,7 @@ export default function ArticleCard({ articles }: ArticleCardProps) {
                             <h3><Skeleton width={200} /></h3>
                             <div className="flex justify-between items-center">
                                 <p className="card_time"><Skeleton width={100} /></p>
-                                <button className="btn_outline_small"><Skeleton width={100} /></button>
+                                <Skeleton width={100} />
                             </div>
                         </div>
                     </div>
@@ -71,13 +71,15 @@ export default function ArticleCard({ articles }: ArticleCardProps) {
                                     )}
                                 </div>
                                 <div className="article_content">
-                                    <small>{item.released_date ?? "--"}</small>
+                                    <small>{item.released_date ?? "-- --- ----"}</small>
                                     <h3>{item.title}</h3>
                                     <p>{item.content}</p>
                                     <div className="flex justify-between items-center">
-                                        <p className="card_time">{item.category ?? "--"}</p>
+                                        <p className="card_time"></p>
                                         {/* <small>{item.category ?? "--"}</small> */}
-                                        <button className="btn_outline_small">Read More</button>
+                                        {item.category && (
+                                            <button className="btn_outline_small">{item.category ?? " "}</button>
+                                        )}
                                     </div>
                                 </div>
                             </div>

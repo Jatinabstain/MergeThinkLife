@@ -75,8 +75,8 @@ console.log('isLoading', isLoading)
         <>
             <Header />
 
-            <div className="mx-auto max-w-[1200px] px-8">
-                <Search />
+            <div className="mx-auto max-w-[1200px] px-8 pt-16">
+                {/* <Search /> */}
                 <BlogTabs category={categories} active_cat={null} />
 
                 {/* Latest Articles Slider */}

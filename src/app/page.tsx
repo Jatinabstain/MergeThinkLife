@@ -203,7 +203,6 @@ export default function Home() {
                   >
                     Continue
                   </button>
-                  <div className="text-red-600 text-sm mt-2">   {'\u00A0'}</div>
                 </div>
               </div>
             </div>

@@ -2,7 +2,7 @@ import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 export default function CategoryLoader() {
     return (
-        <SkeletonTheme baseColor="#e1e1e1" highlightColor="#f2f2f2">
+        <SkeletonTheme baseColor="#F1EDFD" highlightColor="#ffffff" borderRadius={12}>
             <div className="mb-[102px] mt-16">
                 <Skeleton height={524} width={1140} />
             </div>

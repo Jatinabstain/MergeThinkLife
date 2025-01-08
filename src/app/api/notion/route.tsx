@@ -1,6 +1,6 @@
 import { Client } from "@notionhq/client";
 import { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints"; // Import the correct types
-
+import { cache } from 'react';
 import fs from 'fs';
 import path from 'path';
 
@@ -60,56 +60,74 @@ export async function GET(request: Request) {
         if (fetchForCategory) {
             response = '';
             // Fetch all pages from the Notion database
-            response = await notion.databases.query({
-                database_id: databaseId,
-                filter: {
-                    property: "Tags",
-                    multi_select: {
-                        contains: formatString(fetchForCategory)
+            response = cache(async () => {
+                const res = await notion.databases.query({
+                    database_id: databaseId,
+                    filter: {
+                        property: "Tags",
+                        multi_select: {
+                            contains: formatString(fetchForCategory) // Ensure fetchForCategory is formatted
+                        }
                     }
-                }
-            });
+                });
+        
+                return res;
+            })();
         }
         // If no_of_record is provided, fetch the first 'no_of_record' number of records
         else if (no_of_record) {
             response = '';
             // Fetch 'no_of_record' pages from the Notion database
-            response = await notion.databases.query({
-                database_id: databaseId,
-                page_size: no_of_record,
-                filter: {
-                    property: "Status",
-                    status: {
-                        equals: "Published"
+            response = cache(async () => {
+                const res = await notion.databases.query({
+                    database_id: databaseId,
+                    page_size: no_of_record, // No of records to fetch
+                    filter: {
+                        property: "Status",
+                        status: {
+                            equals: "Published" // Only fetch records with "Published" status
+                        }
                     }
-                }
-            });
+                });
+            
+                return res;
+            })();
         }
         // If SearchQuery is provided, fetch the articles that contain the search query
         else if (SearchQuery) {
             response = '';
             // Fetch 'SearchQuery' pages from the Notion database
-            response = await notion.databases.query({
-                database_id: databaseId,
-                filter: {
-                    property: 'Name',
-                    title: {
-                        contains: SearchQuery
+            response = cache(async () => {
+                
+                const res = await notion.databases.query({
+                    database_id: databaseId,
+                    filter: {
+                        property: 'Name',
+                        title: {
+                            contains: SearchQuery // Search query to filter by title
+                        }
                     }
-                }
-            });
+                });
+            
+                return res;
+            })();
         }
         // Fetch all pages from the Notion database
         else {
             response = '';
             // Fetch all pages from the Notion database
-            response = await notion.databases.query({
-                database_id: databaseId,
-            });
+            response = cache(async () => {
+               
+                const res = await notion.databases.query({
+                    database_id: databaseId,
+                });
+            
+                return res;
+            })();
         }
 
         // Your existing logic to handle articles or other data
-        const articles = await Promise.all(response.results
+        const articles = await Promise.all((await response).results
 
             // Filter  for Green Status
             .filter((page) => {
@@ -236,7 +254,7 @@ function formatString(fetchForCategory: string): string {
 
 
 // Function to fetch a Single article by ID
-async function fetchArticleById(articleId: string) {
+const fetchArticleById = cache(async (articleId: string) => {
     try {
         const databaseId = process.env.NEXT_PUBLIC_NOTION_DATABASE_ID;
         if (!databaseId) {
@@ -249,10 +267,8 @@ async function fetchArticleById(articleId: string) {
         // Fetch the page details
         const page = await notion.pages.retrieve({ page_id: pageId });
 
-        // const properties = singleArticle.properties;
         const pageObject = page as PageObjectResponse;
         const properties = pageObject.properties;
-
 
         // Extract article details
         let title = "Untitled";
@@ -294,7 +310,6 @@ async function fetchArticleById(articleId: string) {
         const filteredChildBlocks = childBlocksResponse.filter((block): block is BlockObjectResponse => 'type' in block);
         const htmlContent = processChildBlocks(filteredChildBlocks);
 
-
         // Return the article details
         return {
             id: page.id,
@@ -308,15 +323,16 @@ async function fetchArticleById(articleId: string) {
         console.error("Error fetching article by ID:", error);
         throw error; // Re-throw the error to handle it in the main function
     }
-}
+});
 
 // Function to fetch all categories
-async function fetchAllCategories() {
+const fetchAllCategories = cache(async () => {
     try {
         const databaseId = process.env.NEXT_PUBLIC_NOTION_DATABASE_ID;
         if (!databaseId) {
             throw new Error("Database ID is not defined in environment variables");
         }
+        
         const response = await notion.databases.query({
             database_id: databaseId,
             filter: {
@@ -326,6 +342,7 @@ async function fetchAllCategories() {
                 },
             },
         });
+
         const categories = response.results.flatMap((page, index) => {
             const pageObject = page as PageObjectResponse; // Cast to PageObjectResponse
             const properties = pageObject.properties;
@@ -349,29 +366,9 @@ async function fetchAllCategories() {
         }));
     } catch (error) {
         console.error("Error fetching categories:", error);
-        return new Response(JSON.stringify({ error: 'Failed to fetch categories' }), { status: 500 });
+        throw new Error("Failed to fetch categories");
     }
-
-    // const categories = response.results.flatMap((page, index) => {
-    //     const pageObject = page as PageObjectResponse; // Cast to PageObjectResponse
-    //     const properties = pageObject.properties;
-
-    //     // Fetch Categories
-    //     if (properties.Tags && properties.Tags.type === 'multi_select') {
-    //         return properties.Tags.multi_select.map(tag => ({
-    //             id: index + 1, // Use the index from the flatMap
-    //             href: `${tag.name.replace(/\s+/g, '-').toLowerCase()}`, // Create href by replacing spaces with dashes and converting to lowercase
-    //             name: tag.name // Get the category name
-    //         }));
-    //     }
-    //     return [];
-    // });
-
-    // // Get unique categories based on name
-    // const uniqueCategories = Array.from(new Map(categories.map(item => [item.name, item])).values());
-    // return new Response(JSON.stringify(uniqueCategories), { status: 200 });
-
-}
+});
 
 
 // Function to process child blocks and return HTML content

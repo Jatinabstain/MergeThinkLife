@@ -15,7 +15,7 @@ export default function bigCardItem({ bigCard }: bigCardItemProps) {
     return (
         <div className="grid lg:grid-cols-2 lg:gap-y-0 gap-y-[38px] gap-x-[38px] mb-8">
             {bigCard.map((item) => (
-                <div key={item.name} className="bg-purple-50 p-4 rounded-xl pb-7 hover_card">
+                <div key={item.name} className="bg_primary_light2 p-4 rounded-xl pb-7 hover_card">
                     <Image
                         src={item.icon}
                         alt={item.name}
