@@ -88,13 +88,13 @@ console.log('isLoading', isLoading)
                 </section>
 
                 {/* Popular Articles */}
-                <section className='mb-32'>
+                {/* <section className='mb-32'>
                     <div className="article_heading flex gap-[10.67px] items-center mb-4">
                         <Image src={HeadingStar} alt="" className='heading_icon' />
                         <h3>Most Popular Articles</h3>
                     </div>
                     <ArticleCard articles={articleList} />
-                </section>
+                </section> */}
 
                 {/* Paginated Articles */}
                 <section className='mb-16'>
